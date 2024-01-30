@@ -4,7 +4,7 @@ import java.awt.*;
 public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16; //16x16
     final int scale = 3;
-    final int tileSize = originalTileSize * scale; //48x48 ((3*16)x(3x16))
+    final int tileSize = originalTileSize * scale; //16x3 = 48px
     final int maxScreenColumn = 12;
     final int maxScreenRow = 16;
     final int screenWidth = tileSize * maxScreenColumn; //48*12px
