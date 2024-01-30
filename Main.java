@@ -14,7 +14,7 @@ public class Main {
      window.setLocationRelativeTo(null);
      window.setVisible(true);
 
-    gamePanel.startGameThread();
+   //  gamePanel.startGameThread();  -tråd för att starta spelet
 
     }
 }
