@@ -11,6 +11,13 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenHeight = tileSize * maxScreenRow; //48*16 px = 768 px
 
     Thread gameThread;
+    KeyHandler keyHandler = new KeyHandler();
+    //FPS, spelet körs i 60 FPS
+    int fps = 60;
+    //players default starting position
+    int playerX = 50;
+    int playerY = 300;
+    int playerSpeed = 4;
 
     /**
      * Constructor to set dimensions of window,
@@ -21,6 +28,10 @@ public class GamePanel extends JPanel implements Runnable {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.blue);
         this.setDoubleBuffered(true);
+        this.addKeyListener(keyHandler);
+        this.setFocusable(true);
+        this.requestFocusInWindow();
+        System.out.println("Panel has focus: " + this.isFocusOwner());
     }
 
     /**
@@ -49,29 +60,43 @@ public class GamePanel extends JPanel implements Runnable {
      */
     @Override
     public void run() {
+        double drawInterval = 1000000000.0 / fps; // 0.016666 seconds
+        double nextDrawTime = System.nanoTime() * drawInterval;
         while (gameThread != null) {
             update();
             repaint();
+            try {
+                double remainingtime = nextDrawTime - System.nanoTime();
+                remainingtime /= 1000000;
+                if (remainingtime < 0) {
+                    remainingtime = 0;
+                }
+                Thread.sleep((long) remainingtime);
+                nextDrawTime += drawInterval;
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     public void update() {
-
-
+        if (keyHandler.spacebarPress == true) {
+            playerY -= playerSpeed;
+        }
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         Graphics2D g2 = (Graphics2D) g;
         Graphics2D pipe1 = (Graphics2D) g;
         Graphics2D pipe2 = (Graphics2D) g;
         g2.setColor(Color.white);
-        g2.fillRect(100, 100, tileSize, tileSize);
+        g2.fillRect(playerX, playerY, tileSize, tileSize);
         pipe1.setColor(Color.green);
         pipe1.fillRect(510, 40, 50, 300);
         pipe2.setColor(Color.green);
         pipe2.fillRect(510, 500, 50, 300);
+
         g2.dispose();
     }
 
