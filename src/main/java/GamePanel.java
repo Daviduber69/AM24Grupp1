@@ -33,6 +33,18 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     /**
+     * Starting the thread causes this method to be called.
+     * While gameThread not equals null:
+     * call the method update() and the method repaint()
+     * <p>
+     * The repaint()-method checks if this component is a lightweight component, 
+     * then this method causes a call to this component's paint method as soon as possible. Otherwise, 
+     * this method causes a call to this component's update method as soon as possible.
+     * <p>
+     * Lightweight components are those that are entirely written in Java 
+     * and are drawn using Java's graphics system
+     * 
+     * @see Component.repaint();
      * 
      */
     @Override
