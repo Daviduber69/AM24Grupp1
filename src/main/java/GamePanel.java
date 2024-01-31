@@ -12,7 +12,11 @@ public class GamePanel extends JPanel implements Runnable {
 
     Thread gameThread;
 
-
+    /**
+     * Constructor to set dimensions of window,
+     * background color and also sets whether this
+     * component should use a buffer to paint.
+     */
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.blue);
