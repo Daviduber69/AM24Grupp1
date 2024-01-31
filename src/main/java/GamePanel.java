@@ -25,13 +25,16 @@ public class GamePanel extends JPanel implements Runnable {
 
     /**
      * Allocates a new Thread object
+     * and causes this thread to begin execution
      */
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
     }
 
-    
+    /**
+     * 
+     */
     @Override
     public void run() {
         while (gameThread != null) {
