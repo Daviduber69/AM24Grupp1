@@ -1,1 +1,4 @@
-*.class.idea/*.savetarget/
+*.class
+.idea/
+*.save
+target/
