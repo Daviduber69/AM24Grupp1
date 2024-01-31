@@ -31,7 +31,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
         this.requestFocusInWindow();
-        System.out.println("Panel has focus: " + this.isFocusOwner());
     }
 
     /**
@@ -61,7 +60,7 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     public void run() {
         double drawInterval = 1000000000.0 / fps; // 0.016666 seconds
-        double nextDrawTime = System.nanoTime() * drawInterval;
+        double nextDrawTime = System.nanoTime() + drawInterval;
         while (gameThread != null) {
             update();
             repaint();
@@ -80,8 +79,11 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        if (keyHandler.spacebarPress == true) {
+        if (keyHandler.spacebarPress) {
             playerY -= playerSpeed;
+        }
+        else{
+            playerY += playerSpeed;
         }
     }
 
@@ -96,7 +98,7 @@ public class GamePanel extends JPanel implements Runnable {
         pipe1.fillRect(510, 40, 50, 300);
         pipe2.setColor(Color.green);
         pipe2.fillRect(510, 500, 50, 300);
-
+        this.requestFocusInWindow();
         g2.dispose();
     }
 
