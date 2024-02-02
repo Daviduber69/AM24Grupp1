@@ -75,7 +75,8 @@ public class GamePanel extends JPanel implements Runnable {
                 Thread.sleep((long) remainingtime);
                 nextDrawTime += drawInterval;
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                System.err.println("YOU DIED!!!" );
+                break;
             }
         }
     }
@@ -88,12 +89,13 @@ public class GamePanel extends JPanel implements Runnable {
 
         if (keyHandler.isSpacebarPress()) {
             // Jumping: Apply acceleration upwards
-            playerSpeedY = -7; // You can adjust this value for smoother jumping
+            playerSpeedY = -10; // You can adjust this value for smoother jumping
             playerY += (int) playerSpeedY;
+            keyHandler.resetSpacebarReleased();
+
             // Check if the player is above the top of the window
             if (playerY < 0) {
                 playerY = 0;
-                keyHandler.resetSpacebarReleased();
             }
         } else {
             // Falling or on the ground: Apply gravity
@@ -102,11 +104,27 @@ public class GamePanel extends JPanel implements Runnable {
 
             // Check if the player is on the ground
             if (playerY >= screenHeight - tileSize) {
-                playerY = screenHeight - tileSize; // Ensure the player stays on the ground
-                playerSpeedY = 0; // Reset vertical speed when on the ground
+                resetGame();
 
             }
         }
+    }
+    private void resetGame() {
+        gameThread.interrupt(); // Interrupt the current thread if it's still running
+
+        // Create a new GamePanel instance
+        GamePanel newGamePanel = new GamePanel();
+
+        // Set the new instance as the content pane for the JFrame
+        JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
+        window.setContentPane(newGamePanel);
+
+        // Revalidate and repaint the window
+        window.revalidate();
+        window.repaint();
+
+        // Start the new game thread
+        newGamePanel.startGameThread();
     }
 
     public void paintComponent(Graphics g) {

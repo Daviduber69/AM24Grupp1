@@ -15,6 +15,4 @@ public class Main {
             window.requestFocus();
             gamePanel.startGameThread();
         }
-
-
     }
