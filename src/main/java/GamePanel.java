@@ -15,9 +15,11 @@ public class GamePanel extends JPanel implements Runnable {
     //FPS, spelet körs i 60 FPS
     int fps = 60;
     //players default starting position
-    int playerX = 50;
+    int playerX = 100;
     int playerY = 300;
-    int playerSpeed = 150;
+    int playerSpeed = 100;
+    double playerSpeedY = 0.0;
+    int pipeX = 510;
 
     /**
      * Constructor to set dimensions of window,
@@ -47,15 +49,14 @@ public class GamePanel extends JPanel implements Runnable {
      * While gameThread not equals null:
      * call the method update() and the method repaint()
      * <p>
-     * The repaint()-method checks if this component is a lightweight component, 
-     * then this method causes a call to this component's paint method as soon as possible. Otherwise, 
+     * The repaint()-method checks if this component is a lightweight component,
+     * then this method causes a call to this component's paint method as soon as possible. Otherwise,
      * this method causes a call to this component's update method as soon as possible.
      * <p>
-     * Lightweight components are those that are entirely written in Java 
+     * Lightweight components are those that are entirely written in Java
      * and are drawn using Java's graphics system
-     * 
-    // * @see Component.repaint();
-     * 
+     * <p>
+     * // * @see Component.repaint();
      */
     //Limits FPS to 60 so that the JumpyBirby doenst travel 1 million pixels in a second
     @Override
@@ -79,16 +80,31 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-//checks if spacebar is pressed and released
+    //checks if spacebar is pressed and released
     //then calls the resetSpacebarReleased method which is set to false as default
     //Bird doesn't move further down when at the bottom of the screen
     public void update() {
+        pipeX--;
+
         if (keyHandler.isSpacebarPress()) {
-            playerY -= playerSpeed;
-            keyHandler.resetSpacebarReleased();
+            // Jumping: Apply acceleration upwards
+            playerSpeedY = -7; // You can adjust this value for smoother jumping
+            playerY += (int) playerSpeedY;
+            // Check if the player is above the top of the window
+            if (playerY < 0) {
+                playerY = 0;
+                keyHandler.resetSpacebarReleased();
+            }
         } else {
-            if (playerY < screenHeight - tileSize) {
-                playerY += 5;
+            // Falling or on the ground: Apply gravity
+            playerSpeedY += 0.5; // Gravity effect, you can adjust this value for more or less gravity
+            playerY += (int) playerSpeedY;
+
+            // Check if the player is on the ground
+            if (playerY >= screenHeight - tileSize) {
+                playerY = screenHeight - tileSize; // Ensure the player stays on the ground
+                playerSpeedY = 0; // Reset vertical speed when on the ground
+
             }
         }
     }
@@ -101,9 +117,9 @@ public class GamePanel extends JPanel implements Runnable {
         g2.setColor(Color.white);
         g2.fillRect(playerX, playerY, tileSize, tileSize);
         pipe1.setColor(Color.green);
-        pipe1.fillRect(510, 40, 50, 300);
+        pipe1.fillRect(pipeX, 40, 50, 300);
         pipe2.setColor(Color.green);
-        pipe2.fillRect(510, 500, 50, 300);
+        pipe2.fillRect(pipeX, 500, 50, 300);
         this.requestFocusInWindow();
         g2.dispose();
     }
