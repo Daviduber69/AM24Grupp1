@@ -3,7 +3,6 @@ import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
             JFrame window = new JFrame();
             GamePanel gamePanel = new GamePanel();
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -15,8 +14,7 @@ public class Main {
             window.setVisible(true);
             window.requestFocus();
             gamePanel.startGameThread();
-        });
+        }
 
 
     }
-}

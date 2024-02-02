@@ -17,7 +17,7 @@ public class GamePanel extends JPanel implements Runnable {
     //players default starting position
     int playerX = 50;
     int playerY = 300;
-    int playerSpeed = 4;
+    int playerSpeed = 100;
 
     /**
      * Constructor to set dimensions of window,
@@ -54,9 +54,10 @@ public class GamePanel extends JPanel implements Runnable {
      * Lightweight components are those that are entirely written in Java 
      * and are drawn using Java's graphics system
      * 
-     * @see Component.repaint();
+    // * @see Component.repaint();
      * 
      */
+    //Limits FPS to 60 so that the JumpyBirby doenst travel 1 million pixels in a second
     @Override
     public void run() {
         double drawInterval = 1000000000.0 / fps; // 0.016666 seconds
@@ -78,12 +79,17 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+//checks if spacebar is pressed and released
+    //then calls the resetSpacebarReleased method which is set to false as default
+    //Bird doesn't move further down when at the bottom of the screen
     public void update() {
-        if (keyHandler.spacebarPress) {
+        if (keyHandler.isSpacebarPress()) {
             playerY -= playerSpeed;
-        }
-        else{
-            playerY += playerSpeed;
+            keyHandler.resetSpacebarReleased();
+        } else {
+            if (playerY < screenHeight - tileSize) {
+                playerY += 5;
+            }
         }
     }
 

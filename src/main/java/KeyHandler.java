@@ -2,8 +2,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
-    public boolean spacebarPress;
-
+    private boolean spacebarPress;
+    private boolean spacebarRelease;
+    //registers a spacebar press as only one button press
+    public boolean isSpacebarPress() {
+        return spacebarPress && spacebarRelease;
+    }
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -12,18 +16,22 @@ public class KeyHandler implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
-        System.out.println("Key pressed: " + KeyEvent.getKeyText(code));
         if (code == KeyEvent.VK_SPACE) {
-            spacebarPress = true;
+            if (!spacebarPress) {
+                spacebarPress = true;
+            }
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode();
-        System.out.println("Key released: " + KeyEvent.getKeyText(code));
         if(code == KeyEvent.VK_SPACE){
             spacebarPress = false;
+            spacebarRelease = true;
         }
+    }
+    public void resetSpacebarReleased(){
+        spacebarRelease = false;
     }
 }
