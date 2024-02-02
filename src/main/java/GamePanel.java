@@ -17,7 +17,7 @@ public class GamePanel extends JPanel implements Runnable {
     //players default starting position
     int playerX = 50;
     int playerY = 300;
-    int playerSpeed = 100;
+    int playerSpeed = 150;
 
     /**
      * Constructor to set dimensions of window,
