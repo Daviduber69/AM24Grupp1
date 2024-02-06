@@ -5,24 +5,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 public class BottlePanel extends JPanel {
-    public static Image image;
+    public static Image bottle;
+    public static Image bottle2;
 
 
     public BottlePanel(){
         try{
-            image = ImageIO.read(new File("coca-cola-original-20oz.png"));
+            URL bottleURL = new URL("https://github.com/Daviduber69/AM24Grupp1/blob/main/Colaflaska.png?raw=true");
+            URL bottle2URL = new URL("https://github.com/Daviduber69/AM24Grupp1/blob/main/Colaflaska_uppochner.png?raw=true");
+            bottle = ImageIO.read(bottleURL);
+            bottle2 = ImageIO.read(bottle2URL);
         }catch(IOException e){
             e.printStackTrace();
         }
     }
-    public Dimension preferedSize(){
-        if(image!=null){
-            return new Dimension(image.getWidth(this),image.getHeight(this));
-        }
-        else {
-            return super.getPreferredSize();
-        }
-    }
+  
 }

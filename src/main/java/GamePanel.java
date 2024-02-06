@@ -141,12 +141,10 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D pipe1 = (Graphics2D) g;
         Graphics2D pipe2 = (Graphics2D) g;
         g2.drawImage(ImagePanel.image, playerX, playerY, this);
-        pipe1.setColor(Color.green);
-        pipe1.fillRect(pipeX, 40, 50, 300);
-        pipe2.setColor(Color.green);
-        pipe2.fillRect(pipeX, 500, 50, 300);
         this.requestFocusInWindow();
-        pipe1.drawImage(BottlePanel.image, pipeX, 40, this);
+        pipe1.drawImage(BottlePanel.bottle2, pipeX, 0, this);
+        pipe2.drawImage(BottlePanel.bottle, pipeX, 500, this);
     }
 
 }
+ 
