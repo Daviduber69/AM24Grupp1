@@ -9,7 +9,7 @@ public class GamePanel extends JPanel implements Runnable {
     final int maxScreenRow = 16;
     final int screenWidth = tileSize * maxScreenColumn; //48*12px = 576 px
     final int screenHeight = tileSize * maxScreenRow; //48*16 px = 768 px
-
+    ImagePanel imagePanel;
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
     //FPS, spelet körs i 60 FPS
@@ -33,6 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
         this.requestFocusInWindow();
+        this.imagePanel = new ImagePanel();
     }
 
     /**
@@ -75,7 +76,7 @@ public class GamePanel extends JPanel implements Runnable {
                 Thread.sleep((long) remainingtime);
                 nextDrawTime += drawInterval;
             } catch (InterruptedException e) {
-                System.err.println("YOU DIED!!!" );
+                System.err.println("YOU DIED!!!");
                 break;
             }
         }
@@ -85,7 +86,7 @@ public class GamePanel extends JPanel implements Runnable {
     //then calls the resetSpacebarReleased method which is set to false as default
     //Bird doesn't move further down when at the bottom of the screen
     public void update() {
-        pipeX--;
+        pipeX -= 3;
 
         if (keyHandler.isSpacebarPress()) {
             // Jumping: Apply acceleration upwards
@@ -109,6 +110,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
+
     private void resetGame() {
         gameThread.interrupt(); // Interrupt the current thread if it's still running
 
@@ -127,19 +129,18 @@ public class GamePanel extends JPanel implements Runnable {
         newGamePanel.startGameThread();
     }
 
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         Graphics2D pipe1 = (Graphics2D) g;
         Graphics2D pipe2 = (Graphics2D) g;
-        g2.setColor(Color.white);
-        g2.fillRect(playerX, playerY, tileSize, tileSize);
+        g2.drawImage(ImagePanel.image, playerX, playerY, this);
         pipe1.setColor(Color.green);
         pipe1.fillRect(pipeX, 40, 50, 300);
         pipe2.setColor(Color.green);
         pipe2.fillRect(pipeX, 500, 50, 300);
         this.requestFocusInWindow();
-        g2.dispose();
     }
 
 }
