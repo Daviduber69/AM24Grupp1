@@ -30,7 +30,7 @@ public class GamePanel extends JPanel implements Runnable {
      */
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(Color.blue);
+        this.setBackground(Color.white);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
@@ -142,7 +142,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D pipe2 = (Graphics2D) g;
         g2.drawImage(ImagePanel.image, playerX, playerY, this);
         this.requestFocusInWindow();
-        pipe1.drawImage(BottlePanel.bottle2, pipeX, 0, this);
+        pipe1.drawImage(BottlePanel.bottle2, pipeX, -10, this);
         pipe2.drawImage(BottlePanel.bottle, pipeX, 500, this);
     }
 
