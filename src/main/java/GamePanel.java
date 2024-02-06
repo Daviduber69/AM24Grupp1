@@ -2,24 +2,26 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
-    final int originalTileSize = 16; //16x16
+    final int originalTileSize = 16; // 16x16
     final int scale = 3;
-    final int tileSize = originalTileSize * scale; //16x3 = 48px
+    final int tileSize = originalTileSize * scale; // 16x3 = 48px
     final int maxScreenColumn = 12;
     final int maxScreenRow = 16;
-    final int screenWidth = tileSize * maxScreenColumn; //48*12px = 576 px
-    final int screenHeight = tileSize * maxScreenRow; //48*16 px = 768 px
+    final int screenWidth = tileSize * maxScreenColumn; // 48*12px = 576 px
+    final int screenHeight = tileSize * maxScreenRow; // 48*16 px = 768 px
     ImagePanel imagePanel;
+    BottlePanel bottlePanel;
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
-    //FPS, spelet körs i 60 FPS
+    // FPS, spelet körs i 60 FPS
     int fps = 60;
-    //players default starting position
+    // players default starting position
     int playerX = 100;
     int playerY = 300;
     int playerSpeed = 100;
     double playerSpeedY = 0.0;
     int pipeX = 510;
+
 
     /**
      * Constructor to set dimensions of window,
@@ -34,6 +36,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         this.requestFocusInWindow();
         this.imagePanel = new ImagePanel();
+        this.bottlePanel = new BottlePanel();
     }
 
     /**
@@ -51,15 +54,18 @@ public class GamePanel extends JPanel implements Runnable {
      * call the method update() and the method repaint()
      * <p>
      * The repaint()-method checks if this component is a lightweight component,
-     * then this method causes a call to this component's paint method as soon as possible. Otherwise,
-     * this method causes a call to this component's update method as soon as possible.
+     * then this method causes a call to this component's paint method as soon as
+     * possible. Otherwise,
+     * this method causes a call to this component's update method as soon as
+     * possible.
      * <p>
      * Lightweight components are those that are entirely written in Java
      * and are drawn using Java's graphics system
      * <p>
      * // * @see Component.repaint();
      */
-    //Limits FPS to 60 so that the JumpyBirby doenst travel 1 million pixels in a second
+    // Limits FPS to 60 so that the JumpyBirby doenst travel 1 million pixels in a
+    // second
     @Override
     public void run() {
         double drawInterval = 1000000000.0 / fps; // 0.016666 seconds
@@ -82,9 +88,9 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    //checks if spacebar is pressed and released
-    //then calls the resetSpacebarReleased method which is set to false as default
-    //Bird doesn't move further down when at the bottom of the screen
+    // checks if spacebar is pressed and released
+    // then calls the resetSpacebarReleased method which is set to false as default
+    // Bird doesn't move further down when at the bottom of the screen
     public void update() {
         pipeX -= 3;
 
@@ -129,7 +135,6 @@ public class GamePanel extends JPanel implements Runnable {
         newGamePanel.startGameThread();
     }
 
-
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
@@ -141,6 +146,7 @@ public class GamePanel extends JPanel implements Runnable {
         pipe2.setColor(Color.green);
         pipe2.fillRect(pipeX, 500, 50, 300);
         this.requestFocusInWindow();
+        pipe1.drawImage(BottlePanel.image, pipeX, 40, this);
     }
 
 }
