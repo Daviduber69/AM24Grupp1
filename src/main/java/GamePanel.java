@@ -141,14 +141,12 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        Graphics2D pipe1 = (Graphics2D) g;
-        Graphics2D pipe2 = (Graphics2D) g;
         g.drawImage(backGroundImage, 0, 0, getWidth(), getHeight(), this);
         g2.drawImage(ImagePanel.image, playerX, playerY, this);
+        g2.drawImage(BottlePanel.bottle2, pipeX, -10, this);
+        g2.drawImage(BottlePanel.bottle, pipeX, 500, this);
         this.requestFocusInWindow();
-        pipe1.drawImage(BottlePanel.bottle2, pipeX, -10, this);
-        pipe2.drawImage(BottlePanel.bottle, pipeX, 500, this);
-      
+
     }
 
 }
