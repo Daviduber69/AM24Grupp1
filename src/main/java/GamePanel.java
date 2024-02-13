@@ -155,16 +155,15 @@ public class GamePanel extends JPanel implements Runnable {
         g2.drawImage(BottlePanel.bottle, pipeX, 500, this);
 
         // Add additional pairs of bottles if pipeX < playerX
-        if (pipeX < playerX) {
-            for (int i = 1; pipeX + 300 * i < playerX; i++) {
+        if (pipeX <= playerX) {
+            for (int i = 1; pipeX + 500 * i < playerX; i++) {
                 Graphics2D newPipe = (Graphics2D) g.create(); // Create a new graphics context
-                newPipe.translate(300 * i, 0); // Translate the graphics context
+                newPipe.translate(500 * i, 0); // Translate the graphics context
                 listOfPipes.add(newPipe); // Add the new graphics context to the list
-                newPipe.drawImage(BottlePanel.bottle2, pipeX + 300 * i, -10, this);
-                newPipe.drawImage(BottlePanel.bottle, pipeX + 300 * i, 500, this);
+                newPipe.drawImage(BottlePanel.bottle2, pipeX + 500 * i, -10, this);
+                newPipe.drawImage(BottlePanel.bottle, pipeX + 500 * i, 500, this);
             }
         }
-
         this.requestFocusInWindow();
     }
 }
