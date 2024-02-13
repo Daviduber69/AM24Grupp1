@@ -12,7 +12,7 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenWidth = tileSize * maxScreenColumn; // 48*12px = 576 px
     final int screenHeight = tileSize * maxScreenRow; // 48*16 px = 768 px
     Image backGroundImage;
-   
+
     ImagePanel imagePanel;
     BottlePanel bottlePanel;
     Thread gameThread;
@@ -24,7 +24,7 @@ public class GamePanel extends JPanel implements Runnable {
     int playerY = 300;
     double playerSpeedY = 0.0;
     int pipeX = 510;
-   private List<Pipes> pipes = new ArrayList<>();
+    private List<Pipes> pipes = new ArrayList<>();
 
     /**
      * Constructor to set dimensions of window,
@@ -97,8 +97,6 @@ public class GamePanel extends JPanel implements Runnable {
     // Bird doesn't move further down when at the bottom of the screen
     public void update() {
         pipeX -= 3;
-        addPipes();
-        updatePipes();
         if (keyHandler.isSpacebarPress()) {
             // Jumping: Apply acceleration upwards
             playerSpeedY = -10; // You can adjust this value for smoother jumping
@@ -123,23 +121,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
 
-    private void addPipes() {
-        int pipeX = screenWidth;
-        int pipeYtop = -10;
-        int pipeYbottom = 510;
-        Pipes pipe = new Pipes(pipeX, pipeYtop, pipeYbottom);
-        pipes.add(pipe);
-    }
 
-    private void updatePipes() {
-        for (Pipes pipe : pipes) {
-            pipe.setX(pipe.getX() - 3);
-            if (pipe.getX() < playerX) {
-                pipe.setPassed(true);
-            }
-        }
-        pipes.removeIf(Pipes::isPassed);
-    }
 
     private void resetGame() {
         gameThread.interrupt(); // Interrupt the current thread if it's still running
@@ -162,15 +144,28 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-
         g.drawImage(backGroundImage, 0, 0, getWidth(), getHeight(), this);
         g2.drawImage(ImagePanel.image, playerX, playerY, this);
-        for (Pipes pipe : pipes) {
-            g2.drawImage(BottlePanel.bottle2, pipe.getX()+ pipeX, pipe.getyTop(), this);
-            g2.drawImage(BottlePanel.bottle, pipe.getX() + pipeX, pipe.getyBottom(), this);
-        }
-        this.requestFocusInWindow();
 
+        List<Graphics2D> listOfPipes = new ArrayList<>();
+        listOfPipes.add(g2); // Add the original graphics context to the list
+
+        // Draw the initial pair of bottles
+        g2.drawImage(BottlePanel.bottle2, pipeX, -10, this);
+        g2.drawImage(BottlePanel.bottle, pipeX, 500, this);
+
+        // Add additional pairs of bottles if pipeX < playerX
+        if (pipeX < playerX) {
+            for (int i = 1; pipeX + 300 * i < playerX; i++) {
+                Graphics2D newPipe = (Graphics2D) g.create(); // Create a new graphics context
+                newPipe.translate(300 * i, 0); // Translate the graphics context
+                listOfPipes.add(newPipe); // Add the new graphics context to the list
+                newPipe.drawImage(BottlePanel.bottle2, pipeX + 300 * i, -10, this);
+                newPipe.drawImage(BottlePanel.bottle, pipeX + 300 * i, 500, this);
+            }
+        }
+
+        this.requestFocusInWindow();
     }
 }
  
