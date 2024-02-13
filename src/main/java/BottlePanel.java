@@ -9,7 +9,7 @@ import java.net.URL;
 
 public class BottlePanel extends JPanel {
     public static Image bottle;
-    public static Image bottle2;
+    public static Image bottle2;  
 
 
     public BottlePanel(){

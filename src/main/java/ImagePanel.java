@@ -9,7 +9,7 @@ public class ImagePanel extends JPanel {
     public static Image image;
     public ImagePanel() {
         try {
-            URL imageURL = new URL("https://github.com/Daviduber69/AM24Grupp1/blob/main/hamen.png?raw=true");
+            URL imageURL = new URL("https://github.com/Daviduber69/AM24Grupp1/blob/main/pixelRam3.png?raw=true");
             image = ImageIO.read(imageURL);
         } catch (IOException e) {
             e.printStackTrace();
