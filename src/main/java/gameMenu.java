@@ -8,8 +8,16 @@
      * vad är skillnaden (?)).
      * 
      * Steg 2:
+     * Skapa funktion för att starta spelet.
+     * Denna funktion ska reagerar på input från spaceknappen (ev. vänster musklick)
+     * 
      * 
      */
-public class gameMenu {
 
+import java.awt.event.KeyListener;
+
+public class gameMenu implements KeyListener {
+    public static void startGame() {
+        
+    }
 }
