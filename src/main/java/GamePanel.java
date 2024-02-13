@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16; // 16x16
@@ -15,15 +17,14 @@ public class GamePanel extends JPanel implements Runnable {
     BottlePanel bottlePanel;
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
-    // FPS, spelet körs i 60 FPS
+    // FPS, the game is to be run in 60 Frames per second.
     int fps = 60;
     // players default starting position
     int playerX = 100;
     int playerY = 300;
-    int playerSpeed = 100;
     double playerSpeedY = 0.0;
     int pipeX = 510;
-
+   private List<Pipes> pipes = new ArrayList<>();
 
     /**
      * Constructor to set dimensions of window,
@@ -96,7 +97,8 @@ public class GamePanel extends JPanel implements Runnable {
     // Bird doesn't move further down when at the bottom of the screen
     public void update() {
         pipeX -= 3;
-
+        addPipes();
+        updatePipes();
         if (keyHandler.isSpacebarPress()) {
             // Jumping: Apply acceleration upwards
             playerSpeedY = -10; // You can adjust this value for smoother jumping
@@ -118,6 +120,25 @@ public class GamePanel extends JPanel implements Runnable {
 
             }
         }
+
+    }
+
+    private void addPipes() {
+        int pipeX = screenWidth;
+        int pipeYtop = -10;
+        int pipeYbottom = 510;
+        Pipes pipe = new Pipes(pipeX, pipeYtop, pipeYbottom);
+        pipes.add(pipe);
+    }
+
+    private void updatePipes() {
+        for (Pipes pipe : pipes) {
+            pipe.setX(pipe.getX() - 3);
+            if (pipe.getX() < playerX) {
+                pipe.setPassed(true);
+            }
+        }
+        pipes.removeIf(Pipes::isPassed);
     }
 
     private void resetGame() {
@@ -141,15 +162,15 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        Graphics2D pipe1 = (Graphics2D) g;
-        Graphics2D pipe2 = (Graphics2D) g;
+
         g.drawImage(backGroundImage, 0, 0, getWidth(), getHeight(), this);
         g2.drawImage(ImagePanel.image, playerX, playerY, this);
+        for (Pipes pipe : pipes) {
+            g2.drawImage(BottlePanel.bottle2, pipe.getX()+ pipeX, pipe.getyTop(), this);
+            g2.drawImage(BottlePanel.bottle, pipe.getX() + pipeX, pipe.getyBottom(), this);
+        }
         this.requestFocusInWindow();
-        pipe1.drawImage(BottlePanel.bottle2, pipeX, -10, this);
-        pipe2.drawImage(BottlePanel.bottle, pipeX, 500, this);
-      
-    }
 
+    }
 }
  
