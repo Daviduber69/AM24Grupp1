@@ -9,6 +9,8 @@ public class GamePanel extends JPanel implements Runnable {
     final int maxScreenRow = 16;
     final int screenWidth = tileSize * maxScreenColumn; // 48*12px = 576 px
     final int screenHeight = tileSize * maxScreenRow; // 48*16 px = 768 px
+    Image backGroundImage;
+   
     ImagePanel imagePanel;
     BottlePanel bottlePanel;
     Thread gameThread;
@@ -37,6 +39,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.requestFocusInWindow();
         this.imagePanel = new ImagePanel();
         this.bottlePanel = new BottlePanel();
+        backGroundImage = new ImageIcon("office.jpg").getImage();
     }
 
     /**
@@ -140,10 +143,12 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
         Graphics2D pipe1 = (Graphics2D) g;
         Graphics2D pipe2 = (Graphics2D) g;
+        g.drawImage(backGroundImage, 0, 0, getWidth(), getHeight(), this);
         g2.drawImage(ImagePanel.image, playerX, playerY, this);
         this.requestFocusInWindow();
         pipe1.drawImage(BottlePanel.bottle2, pipeX, -10, this);
         pipe2.drawImage(BottlePanel.bottle, pipeX, 500, this);
+      
     }
 
 }
