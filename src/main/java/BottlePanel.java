@@ -14,8 +14,8 @@ public class BottlePanel extends JPanel {
 
     public BottlePanel(){
         try{
-            URL bottleURL = new URL("https://github.com/Daviduber69/AM24Grupp1/blob/main/Colaflaska.png?raw=true");
-            URL bottle2URL = new URL("https://github.com/Daviduber69/AM24Grupp1/blob/main/Colaflaska_uppochner.png?raw=true");
+            URL bottleURL = new URL("https://github.com/Daviduber69/AM24Grupp1/blob/main/pixelCola.png?raw=true");
+            URL bottle2URL = new URL("https://github.com/Daviduber69/AM24Grupp1/blob/main/pixelColaUppOchNer.png?raw=true");
             bottle = ImageIO.read(bottleURL);
             bottle2 = ImageIO.read(bottle2URL);
         }catch(IOException e){
