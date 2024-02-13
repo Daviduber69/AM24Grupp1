@@ -17,7 +17,11 @@
 import java.awt.event.KeyListener;
 
 public class gameMenu implements KeyListener {
-    public static void startGame() {
-        
+    
+    /*
+     * Skapar en metod startGame som ska ärva av Jframe samt dela funktioner med vår klass gamePanel.
+     */
+    public startGame() {
+
     }
 }
