@@ -16,7 +16,7 @@
 
 import java.awt.event.KeyListener;
 
-public class gameMenu implements KeyListener {
+public class GameMenu implements KeyListener {
     
     /*
      * Skapar en metod startGame som ska ärva av Jframe samt dela funktioner med vår klass gamePanel.
