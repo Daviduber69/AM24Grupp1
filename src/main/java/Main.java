@@ -13,7 +13,7 @@ public class Main {
             window.setLocationRelativeTo(null);                     // Center the window
             window.setVisible(true);                                // Makes the window visable for the user
             window.requestFocus();                                  // Allowing the user to interact with the window
-            GameMenu.startMenuThread();                             // calling method gameMenu
+            GameMenu.menu();                                        // calling method gameMenu
             // gamePanel.startGameThread();                         // starting gameThread
         }
     }
