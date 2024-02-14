@@ -14,6 +14,7 @@
      * 
      */
 
+import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class GameMenu extends GamePanel implements KeyListener {
@@ -22,7 +23,22 @@ public class GameMenu extends GamePanel implements KeyListener {
      * Skapar en metod startGame som ska ärva av Jframe samt dela funktioner med vår klass gamePanel.
      *
      */
-    public startMenuThread() {
+    public void startMenuThread() {
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
 
     }
 }
