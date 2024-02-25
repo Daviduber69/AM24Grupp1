@@ -24,7 +24,7 @@ public class GameMenu extends GamePanel implements KeyListener {
      * I denna klass har vi en metod startMenuThread() som ska lyssna
      * efter ifall använ
      */
-    public void menu() {
+    public static void menu() {
 
     }
 
