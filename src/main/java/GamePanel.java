@@ -24,6 +24,12 @@ public class GamePanel extends JPanel implements Runnable {
     int playerY = 300;
     double playerSpeedY = 0.0;
     int pipeX = 510;
+    private int score = 0;
+    private boolean passedPipes = false;
+    private final int bottleWidth = 170;
+    private final int bottleHeight = 282;
+    private final int playerWidth = 99;
+    private final int playerHeight = 99;
     private List<Pipes> pipes = new ArrayList<>();
 
     /**
@@ -97,6 +103,15 @@ public class GamePanel extends JPanel implements Runnable {
     // Bird doesn't move further down when at the bottom of the screen
     public void update() {
         pipeX -= 3;
+        if (pipeX + bottleWidth < playerX && !passedPipes) {
+            score++;
+            System.out.println(score);
+            passedPipes = true;
+        }
+        // Reset passedPipes flag if the player moves back before the pipe
+        if (pipeX >= playerX) {
+            passedPipes = false;
+        }
         if (keyHandler.isSpacebarPress()) {
             // Jumping: Apply acceleration upwards
             playerSpeedY = -10; // You can adjust this value for smoother jumping
@@ -111,27 +126,36 @@ public class GamePanel extends JPanel implements Runnable {
             // Falling or on the ground: Apply gravity
             playerSpeedY += 0.5; // Gravity effect, you can adjust this value for more or less gravity
             playerY += (int) playerSpeedY;
-
-            // Check if the player is on the ground
-            if (playerY >= screenHeight - tileSize) {
+        }
+        // Check if the player is on the ground
+        if (playerY >= screenHeight - tileSize) {
+            resetGame();
+        }
+        if (pipeX <= playerX) {
+            if (playerY <= 220) {
                 resetGame();
-
+                // Reset the game or perform any action for collision with top bottles
+            } else if (playerY >= 450 ) {
+                resetGame();
+                // Reset the game or perform any action for collision with bottom bottles
             }
         }
 
     }
 
 
-
     private void resetGame() {
         gameThread.interrupt(); // Interrupt the current thread if it's still running
+
+        // Create a new JFrame instance
+        JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
+        window.getContentPane().removeAll(); // Remove all components from the window
 
         // Create a new GamePanel instance
         GamePanel newGamePanel = new GamePanel();
 
-        // Set the new instance as the content pane for the JFrame
-        JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
-        window.setContentPane(newGamePanel);
+        // Add the newGamePanel to the window
+        window.add(newGamePanel);
 
         // Revalidate and repaint the window
         window.revalidate();
@@ -153,16 +177,13 @@ public class GamePanel extends JPanel implements Runnable {
         // Draw the initial pair of bottles
         g2.drawImage(BottlePanel.bottle2, pipeX, -10, this);
         g2.drawImage(BottlePanel.bottle, pipeX, 500, this);
+        for (int i = 1; pipeX + 300 * i < playerX; i++) {
+            Graphics2D newPipe = (Graphics2D) g.create(); // Create a new graphics context
+            newPipe.translate(300 * i, 0); // Translate the graphics context
+            listOfPipes.add(newPipe); // Add the new graphics context to the list
+            newPipe.drawImage(BottlePanel.bottle2, pipeX + 300 * i, -10, this);
+            newPipe.drawImage(BottlePanel.bottle, pipeX + 300 * i, 500, this);
 
-        // Add additional pairs of bottles if pipeX < playerX
-        if (pipeX <= playerX) {
-            for (int i = 1; pipeX + 500 * i < playerX; i++) {
-                Graphics2D newPipe = (Graphics2D) g.create(); // Create a new graphics context
-                newPipe.translate(500 * i, 0); // Translate the graphics context
-                listOfPipes.add(newPipe); // Add the new graphics context to the list
-                newPipe.drawImage(BottlePanel.bottle2, pipeX + 500 * i, -10, this);
-                newPipe.drawImage(BottlePanel.bottle, pipeX + 500 * i, 500, this);
-            }
         }
         this.requestFocusInWindow();
     }
