@@ -23,13 +23,15 @@ public class GamePanel extends JPanel implements Runnable {
     int playerX = 100;
     int playerY = 300;
     double playerSpeedY = 0.0;
-    int pipeX = 510;
+    //int pipeX = 510;
     private int score = 0;
     private boolean passedPipes = false;
     private final int bottleWidth = 170;
     private final int bottleHeight = 282;
     private final int playerWidth = 99;
     private final int playerHeight = 99;
+    private long lastPipeSpawnTime = System.currentTimeMillis();
+    private long pipeSpawnInterval = 4000;
     private List<Pipes> pipes = new ArrayList<>();
 
     /**
@@ -46,6 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.requestFocusInWindow();
         this.imagePanel = new ImagePanel();
         this.bottlePanel = new BottlePanel();
+        initializePipes();
         backGroundImage = new ImageIcon("office.jpg").getImage();
     }
 
@@ -102,16 +105,46 @@ public class GamePanel extends JPanel implements Runnable {
     // then calls the resetSpacebarReleased method which is set to false as default
     // Bird doesn't move further down when at the bottom of the screen
     public void update() {
-        pipeX -= 3;
-        if (pipeX + bottleWidth < playerX && !passedPipes) {
-            score++;
-            System.out.println(score);
-            passedPipes = true;
+        if (System.currentTimeMillis() - lastPipeSpawnTime >= pipeSpawnInterval) {
+            initializePipes();
+            lastPipeSpawnTime = System.currentTimeMillis();
         }
+        // Move the pipes to the left
+        for (Pipes pipe : pipes) {
+            pipe.setX(pipe.getX() - 3);
+
+            // Check collision with pipes and passing pipes
+            int pipeX = pipe.getX();
+            int upperPipeY = pipe.getUpperPipeY();
+            int lowerPipeY = pipe.getLowerPipeY();
+
+            if (pipeX + bottleWidth <= playerX+170 && !pipe.isPassed()) {
+                score++;
+                pipe.setPassed(true);
+                System.out.println(score);
+            }
+            if (playerX + playerWidth - 35 >= pipeX && playerX + 35 <= pipeX + bottleWidth) {
+                if (playerY + 35 <= upperPipeY + bottleHeight || playerY + playerHeight - 35 >= lowerPipeY) {
+                    resetGame();
+                    System.out.println("You got "+score +" points! Wow..");
+                }
+            }
+
+
+        }
+
+        // Remove passed pipes
+        pipes.removeIf(pipe -> pipe.getX() + bottleWidth < 0);
+
         // Reset passedPipes flag if the player moves back before the pipe
-        if (pipeX >= playerX) {
-            passedPipes = false;
+        for (Pipes pipe : pipes) {
+            if (pipe.getX() >= playerX) {
+                passedPipes = false;
+                break; // Exit the loop early once passedPipes is set to false
+            }
         }
+
+        // Handle player movement
         if (keyHandler.isSpacebarPress()) {
             // Jumping: Apply acceleration upwards
             playerSpeedY = -10; // You can adjust this value for smoother jumping
@@ -127,22 +160,17 @@ public class GamePanel extends JPanel implements Runnable {
             playerSpeedY += 0.5; // Gravity effect, you can adjust this value for more or less gravity
             playerY += (int) playerSpeedY;
         }
+
         // Check if the player is on the ground
         if (playerY >= screenHeight - tileSize) {
             resetGame();
+            System.out.println("You got "+score +" points! Wow..");
         }
-        if (pipeX <= playerX) {
-            if (playerY <= 220) {
-                resetGame();
-                // Reset the game or perform any action for collision with top bottles
-            } else if (playerY >= 450 ) {
-                resetGame();
-                // Reset the game or perform any action for collision with bottom bottles
-            }
-        }
-
     }
 
+    private void initializePipes() {
+        pipes.add(new Pipes(500, -10, 500, false));
+    }
 
     private void resetGame() {
         gameThread.interrupt(); // Interrupt the current thread if it's still running
@@ -171,19 +199,16 @@ public class GamePanel extends JPanel implements Runnable {
         g.drawImage(backGroundImage, 0, 0, getWidth(), getHeight(), this);
         g2.drawImage(ImagePanel.image, playerX, playerY, this);
 
-        List<Graphics2D> listOfPipes = new ArrayList<>();
-        listOfPipes.add(g2); // Add the original graphics context to the list
+        for (Pipes pipe : pipes) {
+            int pipeX = pipe.getX();
+            int upperPipeY = pipe.getUpperPipeY();
+            int lowerPipeY = pipe.getLowerPipeY();
 
-        // Draw the initial pair of bottles
-        g2.drawImage(BottlePanel.bottle2, pipeX, -10, this);
-        g2.drawImage(BottlePanel.bottle, pipeX, 500, this);
-        for (int i = 1; pipeX + 300 * i < playerX; i++) {
-            Graphics2D newPipe = (Graphics2D) g.create(); // Create a new graphics context
-            newPipe.translate(300 * i, 0); // Translate the graphics context
-            listOfPipes.add(newPipe); // Add the new graphics context to the list
-            newPipe.drawImage(BottlePanel.bottle2, pipeX + 300 * i, -10, this);
-            newPipe.drawImage(BottlePanel.bottle, pipeX + 300 * i, 500, this);
+            // Draw upper pipe
+            g2.drawImage(BottlePanel.bottle2, pipeX, upperPipeY, this);
 
+            // Draw lower pipe
+            g2.drawImage(BottlePanel.bottle, pipeX, lowerPipeY, this);
         }
         this.requestFocusInWindow();
     }

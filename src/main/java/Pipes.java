@@ -2,34 +2,34 @@
 
     public class Pipes {
         private int x;
-        private int yTop;
-        private int yBottom;
+        private int upperPipeY;
+        private int lowerPipeY;
         private boolean passed;
-        private boolean counted;
 
-        public Pipes(int x, int yTop, int yBottom){
+        public Pipes(int x, int upperPipeY, int lowerPipeY, boolean passed) {
             this.x = x;
-            this.yTop = yTop;
-            this.yBottom = yBottom;
-            this.passed = false;
-            this.counted = false;
+            this.upperPipeY = upperPipeY;
+            this.lowerPipeY = lowerPipeY;
+            this.passed = passed;
         }
 
         public int getX() {
             return x;
         }
 
-        public int getyTop() {
-            return yTop;
+        public int getUpperPipeY() {
+            return upperPipeY;
         }
 
-        public int getyBottom() {
-            return yBottom;
+        public int getLowerPipeY() {
+            return lowerPipeY;
         }
 
         public boolean isPassed() {
             return passed;
         }
+
+        // Setter method for setting the passed state
         public void setPassed(boolean passed) {
             this.passed = passed;
         }
@@ -38,22 +38,12 @@
             this.x = x;
         }
 
-        public void setyTop(int yTop) {
-            this.yTop = yTop;
+        public void setUpperPipeY(int upperPipeY) {
+            this.upperPipeY = upperPipeY;
         }
 
-        public void setyBottom(int yBottom) {
-            this.yBottom = yBottom;
-        }
-        public void setCounted(boolean counted) {
-            this.counted = counted;
-        }
-        public boolean isCounted() {
-            return counted;
-        }
-        public void updatePassed(int playerX) {
-            if (x + 48< playerX) {
-                passed = true;
-            }
+        public void setLowerPipeY(int lowerPipeY) {
+            this.lowerPipeY = lowerPipeY;
         }
     }
+
