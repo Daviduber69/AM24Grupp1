@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenWidth = tileSize * maxScreenColumn; // 48*12px = 576 px
     final int screenHeight = tileSize * maxScreenRow; // 48*16 px = 768 px
     Image backGroundImage;
+   private JLabel playerScore;
 
     ImagePanel imagePanel;
     BottlePanel bottlePanel;
@@ -33,7 +35,7 @@ public class GamePanel extends JPanel implements Runnable {
     private long lastPipeSpawnTime = System.currentTimeMillis();
     private long pipeSpawnInterval = 4000;
     private List<Pipes> pipes = new ArrayList<>();
-
+    private List<Integer> highscore = new ArrayList<>();
     /**
      * Constructor to set dimensions of window,
      * background color and also sets whether this
@@ -41,7 +43,6 @@ public class GamePanel extends JPanel implements Runnable {
      */
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(Color.white);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
@@ -49,6 +50,12 @@ public class GamePanel extends JPanel implements Runnable {
         this.imagePanel = new ImagePanel();
         this.bottlePanel = new BottlePanel();
         initializePipes();
+        playerScore = new JLabel("Score: ");
+        playerScore.setOpaque(true);
+        playerScore.setForeground(Color.green);
+        playerScore.setBackground(Color.black);
+        playerScore.setFont(new Font("Arial",Font.BOLD,48));
+        this.add(playerScore);
         backGroundImage = new ImageIcon("office.jpg").getImage();
     }
 
@@ -100,10 +107,17 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
+    //add pipes pipes with starting coordinate values, for easy mode they spawn at the same coordinates
+    //in update() spawn new pipes every 4 seconds
+    private void initializePipes() {
+        pipes.add(new Pipes(500, -10, 500, false));
+    }
+
 
     // checks if spacebar is pressed and released
     // then calls the resetSpacebarReleased method which is set to false as default
     // Bird doesn't move further down when at the bottom of the screen
+
     public void update() {
         if (System.currentTimeMillis() - lastPipeSpawnTime >= pipeSpawnInterval) {
             initializePipes();
@@ -118,19 +132,20 @@ public class GamePanel extends JPanel implements Runnable {
             int upperPipeY = pipe.getUpperPipeY();
             int lowerPipeY = pipe.getLowerPipeY();
 
-            if (pipeX + bottleWidth <= playerX+170 && !pipe.isPassed()) {
+            //make the player and pipes Rectangles from Swing to use the intersects method
+            // to see if they collide
+            Rectangle playerRect = new Rectangle(playerX + 35, playerY + 35, playerWidth-82, playerHeight - 50);
+            Rectangle upperPipeRect = new Rectangle(pipeX, upperPipeY, bottleWidth, bottleHeight);
+            Rectangle lowerPipeRect = new Rectangle(pipeX, lowerPipeY, bottleWidth, bottleHeight);
+            if (pipeX + bottleWidth <= playerX + 170 && !pipe.isPassed()) {
                 score++;
                 pipe.setPassed(true);
-                System.out.println(score);
+                playerScore.setText("Score: "+score);
             }
-            if (playerX + playerWidth - 35 >= pipeX && playerX + 35 <= pipeX + bottleWidth) {
-                if (playerY + 35 <= upperPipeY + bottleHeight || playerY + playerHeight - 35 >= lowerPipeY) {
-                    resetGame();
-                    System.out.println("You got "+score +" points! Wow..");
-                }
+            if (playerRect.intersects(upperPipeRect) || playerRect.intersects(lowerPipeRect)) {
+                resetGame();
+                System.out.println("You got " + score + " points! Wow..");
             }
-
-
         }
 
         // Remove passed pipes
@@ -164,13 +179,12 @@ public class GamePanel extends JPanel implements Runnable {
         // Check if the player is on the ground
         if (playerY >= screenHeight - tileSize) {
             resetGame();
-            System.out.println("You got "+score +" points! Wow..");
+            System.out.println("You got " + score + " points! Wow..");
         }
     }
 
-    private void initializePipes() {
-        pipes.add(new Pipes(500, -10, 500, false));
-    }
+
+
 
     private void resetGame() {
         gameThread.interrupt(); // Interrupt the current thread if it's still running
