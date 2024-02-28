@@ -14,6 +14,8 @@ public class Main {
         window.setVisible(true);                                // Makes the window visable for the user
         window.requestFocus();                                  // Allowing the user to interact with the window
         GameMenu.menu();                                        // calling method gameMenu
-        gamePanel.startGameThread();                         // starting gameThread
+        gamePanel.startGameThread();                             // starting gameThread
+
+
     }
 }

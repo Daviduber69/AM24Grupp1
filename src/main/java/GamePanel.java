@@ -13,8 +13,9 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenWidth = tileSize * maxScreenColumn; // 48*12px = 576 px
     final int screenHeight = tileSize * maxScreenRow; // 48*16 px = 768 px
     Image backGroundImage;
-   private JLabel playerScore;
-
+    private JLabel playerScore;
+    private SoundPlayer deathSound;
+    private SoundPlayer musicLoop;
     ImagePanel imagePanel;
     BottlePanel bottlePanel;
     Thread gameThread;
@@ -36,6 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
     private long pipeSpawnInterval = 4000;
     private List<Pipes> pipes = new ArrayList<>();
     private List<Integer> highscore = new ArrayList<>();
+
     /**
      * Constructor to set dimensions of window,
      * background color and also sets whether this
@@ -50,11 +52,13 @@ public class GamePanel extends JPanel implements Runnable {
         this.imagePanel = new ImagePanel();
         this.bottlePanel = new BottlePanel();
         initializePipes();
+        deathSound = new SoundPlayer("death.wav", false);
+        musicLoop = new SoundPlayer("questsong-.wav",true);
         playerScore = new JLabel("Score: ");
         playerScore.setOpaque(true);
         playerScore.setForeground(Color.green);
         playerScore.setBackground(Color.black);
-        playerScore.setFont(new Font("Arial",Font.BOLD,48));
+        playerScore.setFont(new Font("Arial", Font.BOLD, 48));
         this.add(playerScore);
         backGroundImage = new ImageIcon("office.jpg").getImage();
     }
@@ -107,6 +111,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
+
     //add pipes pipes with starting coordinate values, for easy mode they spawn at the same coordinates
     //in update() spawn new pipes every 4 seconds
     private void initializePipes() {
@@ -119,6 +124,8 @@ public class GamePanel extends JPanel implements Runnable {
     // Bird doesn't move further down when at the bottom of the screen
 
     public void update() {
+        musicLoop.play();
+
         if (System.currentTimeMillis() - lastPipeSpawnTime >= pipeSpawnInterval) {
             initializePipes();
             lastPipeSpawnTime = System.currentTimeMillis();
@@ -134,22 +141,20 @@ public class GamePanel extends JPanel implements Runnable {
 
             //make the player and pipes Rectangles from Swing to use the intersects method
             // to see if they collide
-            Rectangle playerRect = new Rectangle(playerX + 35, playerY + 35, playerWidth-82, playerHeight - 50);
+            Rectangle playerRect = new Rectangle(playerX + 35, playerY + 35, playerWidth - 82, playerHeight - 50);
             Rectangle upperPipeRect = new Rectangle(pipeX, upperPipeY, bottleWidth, bottleHeight);
             Rectangle lowerPipeRect = new Rectangle(pipeX, lowerPipeY, bottleWidth, bottleHeight);
             if (pipeX + bottleWidth <= playerX + 170 && !pipe.isPassed()) {
                 score++;
                 pipe.setPassed(true);
-                playerScore.setText("Score: "+score);
+                playerScore.setText("Score: " + score);
             }
             if (playerRect.intersects(upperPipeRect) || playerRect.intersects(lowerPipeRect)) {
+                deathSound.play();
                 resetGame();
                 System.out.println("You got " + score + " points! Wow..");
             }
         }
-
-        // Remove passed pipes
-        pipes.removeIf(pipe -> pipe.getX() + bottleWidth < 0);
 
         // Reset passedPipes flag if the player moves back before the pipe
         for (Pipes pipe : pipes) {
@@ -178,33 +183,29 @@ public class GamePanel extends JPanel implements Runnable {
 
         // Check if the player is on the ground
         if (playerY >= screenHeight - tileSize) {
+            deathSound.play();
             resetGame();
             System.out.println("You got " + score + " points! Wow..");
         }
     }
 
 
-
-
     private void resetGame() {
+        musicLoop.stop();
         gameThread.interrupt(); // Interrupt the current thread if it's still running
-
         // Create a new JFrame instance
         JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
         window.getContentPane().removeAll(); // Remove all components from the window
-
         // Create a new GamePanel instance
         GamePanel newGamePanel = new GamePanel();
-
         // Add the newGamePanel to the window
         window.add(newGamePanel);
-
         // Revalidate and repaint the window
         window.revalidate();
         window.repaint();
-
         // Start the new game thread
         newGamePanel.startGameThread();
+        deathSound.stop();
     }
 
     public void paintComponent(Graphics g) {
