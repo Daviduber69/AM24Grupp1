@@ -1,45 +1,42 @@
-    /*
-     * Jag vill skapa en klass som instansieras genom main-metoden.
-     * Denna klass kommer bli spelets meny.
-     * Här är det tänkt att man ska kunna välja svårighetsgrad, starta spelet samt se highscore.
-     * 
-     * Steg 1:
-     * Skapa ett objekt av gameMenu som ska kallas på genom main-klassen (eventuellt göra gameMenu till static,
-     * vad är skillnaden (?)).
-     * 
-     * Steg 2:
-     * Skapa funktion för att starta spelet.
-     * Denna funktion ska reagerar på input från spaceknappen (ev. vänster musklick)
-     * 
-     * 
-     */
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+    public class GameMenu extends JFrame {
+        private GamePanel gamePanel;
+    public GameMenu() {
+        super("GameMenu");
+        setDefaultCloseOperation(GameMenu.EXIT_ON_CLOSE);
+        setSize(500, 250);
+        setResizable(false);
+        setLocationRelativeTo(null);
 
-public class GameMenu extends GamePanel implements KeyListener {
-    
-    /*
-     * Skapar en metod startGame som ska ärva av GamePanel.
-     * I denna klass har vi en metod startMenuThread() som ska lyssna
-     * efter ifall använ
-     */
-    public static void menu() {
 
+        JLabel instructionsLabel = new JLabel("Press Space To Start");
+        instructionsLabel.setBounds(50, 20, 200, 30);
+        add(instructionsLabel);
+
+        JButton startButton = new JButton("Start Game");
+        startButton.setBounds(50, 60, 200, 30);
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startGame();
+            }
+        });
+        add(startButton);
+        setVisible(true);
     }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
+        private void startGame() {
+            dispose();                                              // Close the menu window
+            JFrame gameFrame = new JFrame("Jumpy Birb");
+            gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            gameFrame.setResizable(false);
+            gameFrame.setSize(800, 600);
+            gamePanel = new GamePanel();
+            gameFrame.add(gamePanel);
+            gameFrame.setLocationRelativeTo(null);
+            gameFrame.setVisible(true);                              // Allowing the user to interact with the window
+            gamePanel.startGameThread();                            // starting gameThread
+        }
 }
