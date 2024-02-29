@@ -19,6 +19,7 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_SPACE) {
             if (!spacebarPress) {
                 spacebarPress = true;
+                //startGame(); // Anropa startGame() när spacebar trycks ned
             }
         }
     }
@@ -31,6 +32,7 @@ public class KeyHandler implements KeyListener {
             spacebarRelease = true;
         }
     }
+
     public void resetSpacebarReleased(){
         spacebarRelease = false;
     }

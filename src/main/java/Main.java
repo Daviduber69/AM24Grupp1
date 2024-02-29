@@ -17,5 +17,6 @@ public class Main {
         gamePanel.startGameThread();                             // starting gameThread
 
 
+        //gamePanel.initializeStartButton(); //--test startknapp
     }
 }

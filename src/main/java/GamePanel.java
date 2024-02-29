@@ -4,6 +4,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// nya imports för startknapp----
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16; // 16x16
     final int scale = 3;
@@ -13,9 +17,17 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenWidth = tileSize * maxScreenColumn; // 48*12px = 576 px
     final int screenHeight = tileSize * maxScreenRow; // 48*16 px = 768 px
     Image backGroundImage;
+<<<<<<< Updated upstream
     private JLabel playerScore;
     private SoundPlayer deathSound;
     private SoundPlayer musicLoop;
+=======
+   private JLabel playerScore;
+    private JButton startButton; // startknapp test----
+    private boolean gameRunning = false; // Deklarera och initialisera gameRunning här -- startknapp test
+    private boolean gamePaused = true;
+
+>>>>>>> Stashed changes
     ImagePanel imagePanel;
     BottlePanel bottlePanel;
     Thread gameThread;
@@ -61,6 +73,8 @@ public class GamePanel extends JPanel implements Runnable {
         playerScore.setFont(new Font("Arial", Font.BOLD, 48));
         this.add(playerScore);
         backGroundImage = new ImageIcon("office.jpg").getImage();
+
+        initializeStartButton(); // Call the method to initialize the start button -- test för startknapp
     }
 
     /**
@@ -187,6 +201,39 @@ public class GamePanel extends JPanel implements Runnable {
             resetGame();
             System.out.println("You got " + score + " points! Wow..");
         }
+
+        //test startknapp ---
+        if (gameRunning && playerY >= screenHeight - tileSize) {
+            gameRunning = false; // Avbryt spelet
+            System.out.println("You got " + score + " points! Wow..");
+        }
+        if (!gameRunning || gamePaused) { //---test startknapp
+            return; // Om spelet inte körs eller är pausat, avbryt uppdateringen
+        }
+    }
+
+        //Test för startknapp
+    public void initializeStartButton() {
+        startButton = new JButton("Start"); // Create the start button
+        startButton.setFont(new Font("Arial", Font.BOLD, 20));
+        startButton.setFocusPainted(false);
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startGame(); // Call the method to start the game when the button is clicked
+            }
+        });
+        this.add(startButton); // Add the start button to the panel
+    }
+// also tillagd för  test av startknapp
+    public void startGame() {
+        // Kontrollera om spelet redan körs för att undvika flera startknappar
+        if (!gameRunning) {
+            startButton.setEnabled(false); // Inaktivera startknappen när spelet startar
+            gameRunning = true; // Markera att spelet körs
+            gamePaused = false; // Markera att spelet inte är pausat längre
+            startGameThread(); // Starta spelet
+        }
     }
 
 
@@ -206,6 +253,38 @@ public class GamePanel extends JPanel implements Runnable {
         // Start the new game thread
         newGamePanel.startGameThread();
         deathSound.stop();
+
+        if (gameThread != null) {
+            gameThread.interrupt(); // Interrupt the current thread if it's still running
+
+            initializeStartButton();
+
+            // Create a new JFrame instance
+            JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
+            window.getContentPane().removeAll(); // Remove all components from the window
+
+            // Create a new GamePanel instance
+            GamePanel newGamePanel = new GamePanel();
+
+            // Add the newGamePanel to the window
+            window.add(newGamePanel);
+
+            // Revalidate and repaint the window
+            window.revalidate();
+            window.repaint();
+
+            // Start the new game thread
+            newGamePanel.startGameThread();
+
+
+            //--test startknapp....-----
+
+            gameRunning = false;
+            gamePaused = true; //--test startknapp-----
+            startButton.setEnabled(true); // Aktivera startknappen igen
+            this.remove(startButton); // Ta bort den befintliga startknappen
+            startButton = null; // Nollställ startknappen
+        }
     }
 
     public void paintComponent(Graphics g) {
