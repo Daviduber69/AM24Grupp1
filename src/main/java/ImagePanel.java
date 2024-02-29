@@ -12,8 +12,8 @@ public class ImagePanel extends JPanel {
     public ImagePanel() {
         try {
             playerImage = ImageIO.read(new File("pixelRam3.png"));
-            upperPipe = ImageIO.read(new File("pixelColaUppOchNer.png"));
-            lowerPipe = ImageIO.read(new File("pixelCola.png"));
+            upperPipe = ImageIO.read(new File("vandburk.png"));
+            lowerPipe = ImageIO.read(new File("pixelburk.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -22,14 +22,13 @@ public class GamePanel extends JPanel implements Runnable {
     private SoundPlayer deathSound;
     private SoundPlayer musicLoop;
 
-   private JLabel playerScore;
     private JButton startButton; // startknapp test----
     private boolean gameRunning = false; // Deklarera och initialisera gameRunning här -- startknapp test
     private boolean gamePaused = true;
 
 
     ImagePanel imagePanel;
-    BottlePanel bottlePanel;
+
 
     ImagePanel images;
 
@@ -38,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
     // FPS, the game is to be run in 60 Frames per second.
     int fps = 60;
     // players default starting position
-    int playerX = 100;
+    int playerX = 130;
     int playerY = 300;
     double playerSpeedY = 0.0;
     private int score = 0;
@@ -67,10 +66,10 @@ public class GamePanel extends JPanel implements Runnable {
         initializePipes();
         deathSound = new SoundPlayer("death.wav", false);
         musicLoop = new SoundPlayer("questsong-.wav",true);
-        playerScore = new JLabel("Score: ");
-        playerScore.setOpaque(true);
-        playerScore.setForeground(Color.green);
-        playerScore.setBackground(Color.black);
+        playerScore = new JLabel("");
+        playerScore.setOpaque(false);
+        playerScore.setForeground(Color.white);
+        //playerScore.setBackground(Color.black);
         playerScore.setFont(new Font("Arial", Font.BOLD, 48));
         this.add(playerScore);
         backGroundImage = new ImageIcon("office.jpg").getImage();
@@ -162,7 +161,7 @@ public class GamePanel extends JPanel implements Runnable {
             if (pipeX + bottleWidth <= playerX + 170 && !pipe.isPassed()) {
                 score++;
                 pipe.setPassed(true);
-                playerScore.setText("Score: " + score);
+                playerScore.setText("" + score);
             }
             if (playerRect.intersects(upperPipeRect) || playerRect.intersects(lowerPipeRect)) {
                 deathSound.play();
