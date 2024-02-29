@@ -6,11 +6,14 @@ import java.io.IOException;
 import java.net.URL;
 
 public class ImagePanel extends JPanel {
-    public static Image image;
+    public static Image playerImage;
+    public static Image upperPipe;
+    public static Image lowerPipe;
     public ImagePanel() {
         try {
-            URL imageURL = new URL("https://github.com/Daviduber69/AM24Grupp1/blob/main/pixelRam3.png?raw=true");
-            image = ImageIO.read(imageURL);
+            playerImage = ImageIO.read(new File("pixelRam3.png"));
+            upperPipe = ImageIO.read(new File("pixelColaUppOchNer.png"));
+            lowerPipe = ImageIO.read(new File("pixelCola.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

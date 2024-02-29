@@ -17,19 +17,22 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenWidth = tileSize * maxScreenColumn; // 48*12px = 576 px
     final int screenHeight = tileSize * maxScreenRow; // 48*16 px = 768 px
     Image backGroundImage;
-<<<<<<< Updated upstream
+
     private JLabel playerScore;
     private SoundPlayer deathSound;
     private SoundPlayer musicLoop;
-=======
+
    private JLabel playerScore;
     private JButton startButton; // startknapp test----
     private boolean gameRunning = false; // Deklarera och initialisera gameRunning här -- startknapp test
     private boolean gamePaused = true;
 
->>>>>>> Stashed changes
+
     ImagePanel imagePanel;
     BottlePanel bottlePanel;
+
+    ImagePanel images;
+
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
     // FPS, the game is to be run in 60 Frames per second.
@@ -38,7 +41,6 @@ public class GamePanel extends JPanel implements Runnable {
     int playerX = 100;
     int playerY = 300;
     double playerSpeedY = 0.0;
-    //int pipeX = 510;
     private int score = 0;
     private boolean passedPipes = false;
     private final int bottleWidth = 170;
@@ -61,8 +63,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
         this.requestFocusInWindow();
-        this.imagePanel = new ImagePanel();
-        this.bottlePanel = new BottlePanel();
+        images = new ImagePanel();
         initializePipes();
         deathSound = new SoundPlayer("death.wav", false);
         musicLoop = new SoundPlayer("questsong-.wav",true);
@@ -238,23 +239,10 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     private void resetGame() {
-        musicLoop.stop();
-        gameThread.interrupt(); // Interrupt the current thread if it's still running
-        // Create a new JFrame instance
-        JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
-        window.getContentPane().removeAll(); // Remove all components from the window
-        // Create a new GamePanel instance
-        GamePanel newGamePanel = new GamePanel();
-        // Add the newGamePanel to the window
-        window.add(newGamePanel);
-        // Revalidate and repaint the window
-        window.revalidate();
-        window.repaint();
-        // Start the new game thread
-        newGamePanel.startGameThread();
-        deathSound.stop();
+
 
         if (gameThread != null) {
+            musicLoop.stop();
             gameThread.interrupt(); // Interrupt the current thread if it's still running
 
             initializeStartButton();
@@ -278,7 +266,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 
             //--test startknapp....-----
-
+            deathSound.stop();
             gameRunning = false;
             gamePaused = true; //--test startknapp-----
             startButton.setEnabled(true); // Aktivera startknappen igen
@@ -291,7 +279,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         g.drawImage(backGroundImage, 0, 0, getWidth(), getHeight(), this);
-        g2.drawImage(ImagePanel.image, playerX, playerY, this);
+        g2.drawImage(ImagePanel.playerImage, playerX, playerY, this);
 
         for (Pipes pipe : pipes) {
             int pipeX = pipe.getX();
@@ -299,10 +287,10 @@ public class GamePanel extends JPanel implements Runnable {
             int lowerPipeY = pipe.getLowerPipeY();
 
             // Draw upper pipe
-            g2.drawImage(BottlePanel.bottle2, pipeX, upperPipeY, this);
+            g2.drawImage(ImagePanel.upperPipe, pipeX, upperPipeY, this);
 
             // Draw lower pipe
-            g2.drawImage(BottlePanel.bottle, pipeX, lowerPipeY, this);
+            g2.drawImage(ImagePanel.lowerPipe, pipeX, lowerPipeY, this);
         }
         this.requestFocusInWindow();
     }
