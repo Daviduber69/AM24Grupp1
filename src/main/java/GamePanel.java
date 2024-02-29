@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 // nya imports för startknapp----
@@ -17,7 +18,7 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenWidth = tileSize * maxScreenColumn; // 48*12px = 576 px
     final int screenHeight = tileSize * maxScreenRow; // 48*16 px = 768 px
     Image backGroundImage;
-
+    private JLabel highscore;
     private JLabel playerScore;
     private SoundPlayer deathSound;
     private SoundPlayer musicLoop;
@@ -26,12 +27,8 @@ public class GamePanel extends JPanel implements Runnable {
     private boolean gameRunning = false; // Deklarera och initialisera gameRunning här -- startknapp test
     private boolean gamePaused = true;
 
-
     ImagePanel imagePanel;
-
-
     ImagePanel images;
-
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
     // FPS, the game is to be run in 60 Frames per second.
@@ -41,7 +38,6 @@ public class GamePanel extends JPanel implements Runnable {
     int playerY = 300;
     double playerSpeedY = 0.0;
     private int score = 0;
-    private boolean passedPipes = false;
     private final int bottleWidth = 170;
     private final int bottleHeight = 282;
     private final int playerWidth = 99;
@@ -49,7 +45,7 @@ public class GamePanel extends JPanel implements Runnable {
     private long lastPipeSpawnTime = System.currentTimeMillis();
     private long pipeSpawnInterval = 4000;
     private List<Pipes> pipes = new ArrayList<>();
-    private List<Integer> highscore = new ArrayList<>();
+    Highscore highscoreList = new Highscore();
 
     /**
      * Constructor to set dimensions of window,
@@ -70,8 +66,18 @@ public class GamePanel extends JPanel implements Runnable {
         playerScore.setOpaque(false);
         playerScore.setForeground(Color.white);
         //playerScore.setBackground(Color.black);
+        musicLoop = new SoundPlayer("questsong-.wav", true);
+        playerScore = new JLabel("Score: ");
+        highscore = new JLabel("Highscore: ");
+        playerScore.setOpaque(true);
+        playerScore.setForeground(Color.green);
+        playerScore.setBackground(Color.black);
         playerScore.setFont(new Font("Arial", Font.BOLD, 48));
+        highscore.setForeground(Color.pink);
+        highscore.setFont(new Font("Arial",Font.BOLD,24));
+        highscore.setBounds(10,10,10,10);
         this.add(playerScore);
+        this.add(highscore);
         backGroundImage = new ImageIcon("office.jpg").getImage();
 
         initializeStartButton(); // Call the method to initialize the start button -- test för startknapp
@@ -90,16 +96,13 @@ public class GamePanel extends JPanel implements Runnable {
      * Starting the thread causes this method to be called.
      * While gameThread not equals null:
      * call the method update() and the method repaint()
-     * <p>
      * The repaint()-method checks if this component is a lightweight component,
      * then this method causes a call to this component's paint method as soon as
      * possible. Otherwise,
      * this method causes a call to this component's update method as soon as
      * possible.
-     * <p>
      * Lightweight components are those that are entirely written in Java
      * and are drawn using Java's graphics system
-     * <p>
      * // * @see Component.repaint();
      */
     // Limits FPS to 60 so that the JumpyBirby doenst travel 1 million pixels in a
@@ -139,20 +142,20 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         musicLoop.play();
-
         if (System.currentTimeMillis() - lastPipeSpawnTime >= pipeSpawnInterval) {
             initializePipes();
             lastPipeSpawnTime = System.currentTimeMillis();
         }
+        highscore.setText(String.valueOf(highscoreList.printHighscore()));
+        highscoreList.saveHighscore();
+        playerScore.setText(String.valueOf(score));
         // Move the pipes to the left
         for (Pipes pipe : pipes) {
             pipe.setX(pipe.getX() - 3);
-
             // Check collision with pipes and passing pipes
             int pipeX = pipe.getX();
             int upperPipeY = pipe.getUpperPipeY();
             int lowerPipeY = pipe.getLowerPipeY();
-
             //make the player and pipes Rectangles from Swing to use the intersects method
             // to see if they collide
             Rectangle playerRect = new Rectangle(playerX + 35, playerY + 35, playerWidth - 82, playerHeight - 50);
@@ -162,18 +165,18 @@ public class GamePanel extends JPanel implements Runnable {
                 score++;
                 pipe.setPassed(true);
                 playerScore.setText("" + score);
+                highscoreList.addScore(score);
+
             }
             if (playerRect.intersects(upperPipeRect) || playerRect.intersects(lowerPipeRect)) {
                 deathSound.play();
                 resetGame();
-                System.out.println("You got " + score + " points! Wow..");
             }
         }
-
         // Reset passedPipes flag if the player moves back before the pipe
         for (Pipes pipe : pipes) {
             if (pipe.getX() >= playerX) {
-                passedPipes = false;
+                pipe.setPassed(false);
                 break; // Exit the loop early once passedPipes is set to false
             }
         }
@@ -199,20 +202,17 @@ public class GamePanel extends JPanel implements Runnable {
         if (playerY >= screenHeight - tileSize) {
             deathSound.play();
             resetGame();
-            System.out.println("You got " + score + " points! Wow..");
         }
-
         //test startknapp ---
         if (gameRunning && playerY >= screenHeight - tileSize) {
             gameRunning = false; // Avbryt spelet
-            System.out.println("You got " + score + " points! Wow..");
         }
         if (!gameRunning || gamePaused) { //---test startknapp
             return; // Om spelet inte körs eller är pausat, avbryt uppdateringen
         }
     }
 
-        //Test för startknapp
+    //Test för startknapp
     public void initializeStartButton() {
         startButton = new JButton("Start"); // Create the start button
         startButton.setFont(new Font("Arial", Font.BOLD, 20));
@@ -225,7 +225,8 @@ public class GamePanel extends JPanel implements Runnable {
         });
         this.add(startButton); // Add the start button to the panel
     }
-// also tillagd för  test av startknapp
+
+    // also tillagd för  test av startknapp
     public void startGame() {
         // Kontrollera om spelet redan körs för att undvika flera startknappar
         if (!gameRunning) {
@@ -239,39 +240,34 @@ public class GamePanel extends JPanel implements Runnable {
 
     private void resetGame() {
 
+        musicLoop.stop();
+        gameThread.interrupt(); // Interrupt the current thread if it's still running
+        initializeStartButton();
+        // Create a new JFrame instance
+        JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
+        window.getContentPane().removeAll(); // Remove all components from the window
 
-        if (gameThread != null) {
-            musicLoop.stop();
-            gameThread.interrupt(); // Interrupt the current thread if it's still running
+        // Create a new GamePanel instance
+        GamePanel newGamePanel = new GamePanel();
 
-            initializeStartButton();
+        // Add the newGamePanel to the window
+        window.add(newGamePanel);
 
-            // Create a new JFrame instance
-            JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
-            window.getContentPane().removeAll(); // Remove all components from the window
-
-            // Create a new GamePanel instance
-            GamePanel newGamePanel = new GamePanel();
-
-            // Add the newGamePanel to the window
-            window.add(newGamePanel);
-
-            // Revalidate and repaint the window
-            window.revalidate();
-            window.repaint();
-
-            // Start the new game thread
-            newGamePanel.startGameThread();
+        // Revalidate and repaint the window
+        window.revalidate();
+        window.repaint();
+        // Start the new game thread
+        newGamePanel.startGameThread();
 
 
-            //--test startknapp....-----
-            deathSound.stop();
-            gameRunning = false;
-            gamePaused = true; //--test startknapp-----
-            startButton.setEnabled(true); // Aktivera startknappen igen
-            this.remove(startButton); // Ta bort den befintliga startknappen
-            startButton = null; // Nollställ startknappen
-        }
+        //--test startknapp....-----
+
+        gameRunning = false;
+        gamePaused = true; //--test startknapp-----
+        startButton.setEnabled(true); // Aktivera startknappen igen
+        this.remove(startButton); // Ta bort den befintliga startknappen
+        startButton = null; // Nollställ startknappen
+
     }
 
     public void paintComponent(Graphics g) {
