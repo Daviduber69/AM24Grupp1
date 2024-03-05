@@ -62,11 +62,8 @@ public class GamePanel extends JPanel implements Runnable {
         deathSound = new SoundPlayer("death.wav", false);
         musicLoop = new SoundPlayer("questsong-.wav", true);
         playerScore = new JLabel("");
+        highscore = new JLabel("");
         playerScore.setOpaque(false);
-        playerScore.setForeground(Color.white);
-        playerScore = new JLabel("Score: ");
-        highscore = new JLabel("Highscore: ");
-        playerScore.setOpaque(true);
         playerScore.setForeground(Color.green);
         playerScore.setBackground(Color.black);
         playerScore.setFont(new Font("Arial", Font.BOLD, 48));
@@ -142,13 +139,12 @@ public class GamePanel extends JPanel implements Runnable {
     // Bird doesn't move further down when at the bottom of the screen
 
     public void update() {
-
         if (System.currentTimeMillis() - lastPipeSpawnTime >= pipeSpawnInterval) {
             initializePipes();
             lastPipeSpawnTime = System.currentTimeMillis();
         }
-        highscore.setText(String.valueOf(highscoreList.printHighscore()));
         highscoreList.saveHighscore();
+        highscore.setText(String.valueOf(highscoreList.printHighscore()));
         playerScore.setText(String.valueOf(score));
         // Move the pipes to the left
         for (Pipes pipe : pipes) {
@@ -159,14 +155,13 @@ public class GamePanel extends JPanel implements Runnable {
             //make the player and pipes Rectangles from Swing to use the intersects method
             // to see if they collide
             Rectangle playerRect = new Rectangle(playerX + 35, playerY + 35, playerWidth - 82, playerHeight - 50);
-            Rectangle upperPipeRect = new Rectangle(pipeX, upperPipeY, bottleWidth+10, bottleHeight+15);
-            Rectangle lowerPipeRect = new Rectangle(pipeX, lowerPipeY, bottleWidth+10, bottleHeight+15);
+            Rectangle upperPipeRect = new Rectangle(pipeX, upperPipeY, bottleWidth + 10, bottleHeight + 15);
+            Rectangle lowerPipeRect = new Rectangle(pipeX, lowerPipeY, bottleWidth + 10, bottleHeight + 15);
             if (pipeX + bottleWidth <= playerX + 170 && !pipe.isPassed()) {
                 score++;
                 pipe.setPassed(true);
                 playerScore.setText("" + score);
                 highscoreList.addScore(score);
-
             }
             if (playerRect.intersects(upperPipeRect) || playerRect.intersects(lowerPipeRect)) {
                 deathSound.play();
