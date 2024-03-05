@@ -14,32 +14,39 @@
      * 
      */
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import javax.swing.*;
+import java.awt.event.ActionListener;
 
-public class GameMenu extends GamePanel implements KeyListener {
-    
-    /*
-     * Skapar en metod startGame som ska ärva av GamePanel.
-     * I denna klass har vi en metod startMenuThread() som ska lyssna
-     * efter ifall använ
-     */
-    public static void menu() {
+    public class GameMenu extends JFrame {
+    private GamePanel gamePanel;
 
-    }
+    public GameMenu() {
+        super("Game Menu");
+        setSize(60, 200);
+        setLocationRelativeTo(null);
+        setResizable(false);
 
-    @Override
-    public void keyTyped(KeyEvent e) {
+        JLabel label = new JLabel("Start Game");
 
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
+        JButton startButton = new JButton("Start Game");
+        startButton.setBounds(10, 10, 10, 10);
+        startButton.addActionListener(e -> startGame());
+        add(startButton);
+        startButton.setVisible(true);
 
     }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
+    private void startGame() {
+        dispose();                                              // closes previous JFrame-object
+        JFrame window = new JFrame();                           // Creates a new window
+        GamePanel gamePanel = new GamePanel();                  // Creates a new GamePanel
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Makes closing on demand available
+        window.setResizable(false);                             // Sets this frame not resizable by the user.
+        window.setTitle("Jumpy Birb");                          // Set title
+        window.add(gamePanel);                                  // Makes everything that is modified in gamePanel class visible in the window
+        window.pack();                                          // Layout estimation for the most preferable construction of the window
+        window.setLocationRelativeTo(null);                     // Center the window
+        window.setVisible(true);                                // Makes the window visable for the user
+        window.requestFocus();                                  // Allowing the user to interact with the window
+        gamePanel.startGameThread();                             // starting gameThread
     }
 }
