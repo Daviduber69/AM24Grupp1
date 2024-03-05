@@ -8,6 +8,7 @@ import java.util.List;
 // nya imports för startknapp----
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16; // 16x16
@@ -26,8 +27,6 @@ public class GamePanel extends JPanel implements Runnable {
     private JButton startButton; // startknapp test----
     private boolean gameRunning = false; // Deklarera och initialisera gameRunning här -- startknapp test
     private boolean gamePaused = true;
-
-    ImagePanel imagePanel;
     ImagePanel images;
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
@@ -38,10 +37,10 @@ public class GamePanel extends JPanel implements Runnable {
     int playerY = 300;
     double playerSpeedY = 0.0;
     private int score = 0;
-    private final int bottleWidth = 170;
-    private final int bottleHeight = 282;
-    private final int playerWidth = 99;
-    private final int playerHeight = 99;
+    private int bottleWidth = 170;
+    private int bottleHeight = 282;
+    private int playerWidth = 99;
+    private int playerHeight = 99;
     private long lastPipeSpawnTime = System.currentTimeMillis();
     private long pipeSpawnInterval = 4000;
     private List<Pipes> pipes = new ArrayList<>();
@@ -61,12 +60,10 @@ public class GamePanel extends JPanel implements Runnable {
         images = new ImagePanel();
         initializePipes();
         deathSound = new SoundPlayer("death.wav", false);
-        musicLoop = new SoundPlayer("questsong-.wav",true);
+        musicLoop = new SoundPlayer("questsong-.wav", true);
         playerScore = new JLabel("");
         playerScore.setOpaque(false);
         playerScore.setForeground(Color.white);
-        //playerScore.setBackground(Color.black);
-        musicLoop = new SoundPlayer("questsong-.wav", true);
         playerScore = new JLabel("Score: ");
         highscore = new JLabel("Highscore: ");
         playerScore.setOpaque(true);
@@ -74,12 +71,11 @@ public class GamePanel extends JPanel implements Runnable {
         playerScore.setBackground(Color.black);
         playerScore.setFont(new Font("Arial", Font.BOLD, 48));
         highscore.setForeground(Color.pink);
-        highscore.setFont(new Font("Arial",Font.BOLD,24));
-        highscore.setBounds(10,10,10,10);
+        highscore.setFont(new Font("Arial", Font.BOLD, 24));
+        highscore.setBounds(10, 10, 10, 10);
         this.add(playerScore);
         this.add(highscore);
         backGroundImage = new ImageIcon("office.jpg").getImage();
-
         initializeStartButton(); // Call the method to initialize the start button -- test för startknapp
     }
 
@@ -132,7 +128,12 @@ public class GamePanel extends JPanel implements Runnable {
     //add pipes pipes with starting coordinate values, for easy mode they spawn at the same coordinates
     //in update() spawn new pipes every 4 seconds
     private void initializePipes() {
-        pipes.add(new Pipes(500, -10, 500, false));
+        Random random = new Random();
+        int lowerY = 500;
+        int upperY = random.nextInt((150 + 80) + 1) - 80;
+        lowerY = lowerY + upperY;
+        pipes.add(new Pipes(500, upperY, lowerY, false));
+
     }
 
 
@@ -141,7 +142,7 @@ public class GamePanel extends JPanel implements Runnable {
     // Bird doesn't move further down when at the bottom of the screen
 
     public void update() {
-        musicLoop.play();
+
         if (System.currentTimeMillis() - lastPipeSpawnTime >= pipeSpawnInterval) {
             initializePipes();
             lastPipeSpawnTime = System.currentTimeMillis();
@@ -152,15 +153,14 @@ public class GamePanel extends JPanel implements Runnable {
         // Move the pipes to the left
         for (Pipes pipe : pipes) {
             pipe.setX(pipe.getX() - 3);
-            // Check collision with pipes and passing pipes
             int pipeX = pipe.getX();
             int upperPipeY = pipe.getUpperPipeY();
             int lowerPipeY = pipe.getLowerPipeY();
             //make the player and pipes Rectangles from Swing to use the intersects method
             // to see if they collide
             Rectangle playerRect = new Rectangle(playerX + 35, playerY + 35, playerWidth - 82, playerHeight - 50);
-            Rectangle upperPipeRect = new Rectangle(pipeX, upperPipeY, bottleWidth, bottleHeight);
-            Rectangle lowerPipeRect = new Rectangle(pipeX, lowerPipeY, bottleWidth, bottleHeight);
+            Rectangle upperPipeRect = new Rectangle(pipeX, upperPipeY, bottleWidth+10, bottleHeight+15);
+            Rectangle lowerPipeRect = new Rectangle(pipeX, lowerPipeY, bottleWidth+10, bottleHeight+15);
             if (pipeX + bottleWidth <= playerX + 170 && !pipe.isPassed()) {
                 score++;
                 pipe.setPassed(true);
@@ -239,9 +239,9 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     private void resetGame() {
-
         musicLoop.stop();
-        gameThread.interrupt(); // Interrupt the current thread if it's still running
+        gameThread.interrupt();// Interrupt the current thread if it's still running
+
         initializeStartButton();
         // Create a new JFrame instance
         JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);

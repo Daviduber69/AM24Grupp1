@@ -3,3 +3,4 @@
 *.save
 target/
 .DS_Store
+.txt
