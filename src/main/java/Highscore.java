@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -9,8 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class Highscore {
-    private List<Integer> highscore;
+    private final List<Integer> highscore;
     Path filePath = Paths.get("highscore.txt");
+
     public Highscore() {
         this.highscore = new ArrayList<>();
     }
@@ -23,31 +21,20 @@ public class Highscore {
         if (highscore.isEmpty()) {
             return 0;
         }
-        Collections.sort(highscore, Collections.reverseOrder());
+        highscore.sort(Collections.reverseOrder());
         return highscore.get(0);
     }
-    public void saveHighscore() {
-        try (
-                BufferedWriter writer = Files.newBufferedWriter((filePath), StandardCharsets.UTF_8,
-        StandardOpenOption.APPEND)) {
-            if(showHighscore()>0){
-                writer.write(Integer.toString(showHighscore()));
-                writer.newLine();
-                highscore.clear();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public int printHighscore() {
-        String line;
-        int maxScore = 0;
+    public void saveHighscore() {
         if (Files.exists(filePath)) {
-            try (BufferedReader inputReader = Files.newBufferedReader(filePath)) {
-                while ((line = inputReader.readLine()) != null) {
-                    int max = Integer.parseInt(line);
-                    maxScore = Math.max(maxScore, max);
+            try (
+                    BufferedWriter writer = Files.newBufferedWriter((filePath)
+                            ,StandardCharsets.UTF_8
+                            ,StandardOpenOption.APPEND)) {
+                if (showHighscore() > 0) {
+                    writer.write(Integer.toString(showHighscore()));
+                    writer.newLine();
+                    highscore.clear();
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -58,6 +45,19 @@ public class Highscore {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    public int printHighscore() {
+        String line;
+        int maxScore = 0;
+        try (BufferedReader inputReader = Files.newBufferedReader(filePath)) {
+            while ((line = inputReader.readLine()) != null) {
+                int max = Integer.parseInt(line);
+                maxScore = Math.max(maxScore, max);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return maxScore;
     }

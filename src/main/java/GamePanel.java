@@ -1,23 +1,21 @@
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 // nya imports för startknapp----
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
+import java.util.List;
 
 public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16; // 16x16
     final int scale = 3;
     final int tileSize = originalTileSize * scale; // 16x3 = 48px
-    final int maxScreenColumn = 12;
-    final int maxScreenRow = 16;
-    final int screenWidth = tileSize * maxScreenColumn; // 48*12px = 576 px
-    final int screenHeight = tileSize * maxScreenRow; // 48*16 px = 768 px
+    final int maxScreenColumn = 24;
+    final int maxScreenRow = 36;
+    final int screenWidth = tileSize * maxScreenColumn; // 48*24px = 1152 px
+    final int screenHeight = tileSize * maxScreenRow; // 48*36 px = 1728 px
     Image backGroundImage;
     private JLabel highscore;
     private JLabel playerScore;
@@ -42,8 +40,7 @@ public class GamePanel extends JPanel implements Runnable {
     private int playerWidth = 99;
     private int playerHeight = 99;
     private long lastPipeSpawnTime = System.currentTimeMillis();
-    private long pipeSpawnInterval = 4000;
-    private List<Pipes> pipes = new ArrayList<>();
+    private final List<Pipes> pipes = new ArrayList<>();
     Highscore highscoreList = new Highscore();
 
     /**
@@ -127,10 +124,9 @@ public class GamePanel extends JPanel implements Runnable {
     private void initializePipes() {
         Random random = new Random();
         int lowerY = 500;
-        int upperY = random.nextInt((150 + 80) + 1) - 80;
+        int upperY = random.nextInt((200 + 100) + 1) - 100;
         lowerY = lowerY + upperY;
-        pipes.add(new Pipes(500, upperY, lowerY, false));
-
+        pipes.add(new Pipes(1152, upperY, lowerY, false));
     }
 
 
@@ -139,6 +135,7 @@ public class GamePanel extends JPanel implements Runnable {
     // Bird doesn't move further down when at the bottom of the screen
 
     public void update() {
+        long pipeSpawnInterval = 2500;
         if (System.currentTimeMillis() - lastPipeSpawnTime >= pipeSpawnInterval) {
             initializePipes();
             lastPipeSpawnTime = System.currentTimeMillis();
@@ -155,8 +152,8 @@ public class GamePanel extends JPanel implements Runnable {
             //make the player and pipes Rectangles from Swing to use the intersects method
             // to see if they collide
             Rectangle playerRect = new Rectangle(playerX + 35, playerY + 35, playerWidth - 82, playerHeight - 50);
-            Rectangle upperPipeRect = new Rectangle(pipeX, upperPipeY, bottleWidth + 10, bottleHeight + 15);
-            Rectangle lowerPipeRect = new Rectangle(pipeX, lowerPipeY, bottleWidth + 10, bottleHeight + 15);
+            Rectangle upperPipeRect = new Rectangle(pipeX, upperPipeY, bottleWidth + 10, bottleHeight + 20);
+            Rectangle lowerPipeRect = new Rectangle(pipeX, lowerPipeY, bottleWidth + 10, bottleHeight + 20);
             if (pipeX + bottleWidth <= playerX + 170 && !pipe.isPassed()) {
                 score++;
                 pipe.setPassed(true);
@@ -167,122 +164,130 @@ public class GamePanel extends JPanel implements Runnable {
                 deathSound.play();
                 resetGame();
             }
-        }
-        // Reset passedPipes flag if the player moves back before the pipe
-        for (Pipes pipe : pipes) {
             if (pipe.getX() >= playerX) {
                 pipe.setPassed(false);
-                break; // Exit the loop early once passedPipes is set to false
             }
         }
+
 
         // Handle player movement
-        if (keyHandler.isSpacebarPress()) {
-            // Jumping: Apply acceleration upwards
-            playerSpeedY = -10; // You can adjust this value for smoother jumping
-            playerY += (int) playerSpeedY;
-            keyHandler.resetSpacebarReleased();
+        if(keyHandler.isSpacebarPress())
 
-            // Check if the player is above the top of the window
-            if (playerY < 0) {
-                playerY = 0;
-            }
-        } else {
-            // Falling or on the ground: Apply gravity
-            playerSpeedY += 0.5; // Gravity effect, you can adjust this value for more or less gravity
-            playerY += (int) playerSpeedY;
-        }
+    {
+        // Jumping: Apply acceleration upwards
+        playerSpeedY = -10; // You can adjust this value for smoother jumping
+        playerY += (int) playerSpeedY;
+        keyHandler.resetSpacebarReleased();
 
-        // Check if the player is on the ground
-        if (playerY >= screenHeight - tileSize) {
-            deathSound.play();
-            resetGame();
+        // Check if the player is above the top of the window
+        if (playerY < 0) {
+            playerY = 0;
         }
-        //test startknapp ---
-        if (gameRunning && playerY >= screenHeight - tileSize) {
-            gameRunning = false; // Avbryt spelet
-        }
-        if (!gameRunning || gamePaused) { //---test startknapp
-            return; // Om spelet inte körs eller är pausat, avbryt uppdateringen
-        }
+    } else
+
+    {
+        // Falling or on the ground: Apply gravity
+        playerSpeedY += 0.5; // Gravity effect, you can adjust this value for more or less gravity
+        playerY += (int) playerSpeedY;
     }
 
-    //Test för startknapp
-    public void initializeStartButton() {
-        startButton = new JButton("Start"); // Create the start button
-        startButton.setFont(new Font("Arial", Font.BOLD, 20));
-        startButton.setFocusPainted(false);
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                startGame(); // Call the method to start the game when the button is clicked
-            }
-        });
-        this.add(startButton); // Add the start button to the panel
-    }
+    // Check if the player is on the ground
+        if(playerY >=screenHeight -tileSize)
 
-    // also tillagd för  test av startknapp
-    public void startGame() {
-        // Kontrollera om spelet redan körs för att undvika flera startknappar
-        if (!gameRunning) {
-            startButton.setEnabled(false); // Inaktivera startknappen när spelet startar
-            gameRunning = true; // Markera att spelet körs
-            gamePaused = false; // Markera att spelet inte är pausat längre
-            startGameThread(); // Starta spelet
+    {
+        deathSound.play();
+        resetGame();
+    }
+    //test startknapp ---
+        if(gameRunning &&playerY >=screenHeight -tileSize)
+
+    {
+        gameRunning = false; // Avbryt spelet
+    }
+        if(!gameRunning ||gamePaused)
+
+    { //---test startknapp
+        return; // Om spelet inte körs eller är pausat, avbryt uppdateringen
+    }
+}
+
+
+//Test för startknapp
+public void initializeStartButton() {
+    startButton = new JButton("Start"); // Create the start button
+    startButton.setFont(new Font("Arial", Font.BOLD, 20));
+    startButton.setFocusPainted(false);
+    startButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            startGame(); // Call the method to start the game when the button is clicked
         }
+    });
+    this.add(startButton); // Add the start button to the panel
+}
+
+// also tillagd för  test av startknapp
+public void startGame() {
+    // Kontrollera om spelet redan körs för att undvika flera startknappar
+    if (!gameRunning) {
+        startButton.setEnabled(false); // Inaktivera startknappen när spelet startar
+        gameRunning = true; // Markera att spelet körs
+        gamePaused = false; // Markera att spelet inte är pausat längre
+        startGameThread(); // Starta spelet
     }
+}
 
 
-    private void resetGame() {
-        musicLoop.stop();
-        gameThread.interrupt();// Interrupt the current thread if it's still running
+private void resetGame() {
+    musicLoop.stop();
+    gameThread.interrupt();// Interrupt the current thread if it's still running
 
-        initializeStartButton();
-        // Create a new JFrame instance
-        JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
-        window.getContentPane().removeAll(); // Remove all components from the window
+    initializeStartButton();
+    // Create a new JFrame instance
+    JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
+    window.getContentPane().removeAll(); // Remove all components from the window
 
-        // Create a new GamePanel instance
-        GamePanel newGamePanel = new GamePanel();
+    // Create a new GamePanel instance
+    GamePanel newGamePanel = new GamePanel();
 
-        // Add the newGamePanel to the window
-        window.add(newGamePanel);
+    // Add the newGamePanel to the window
+    window.add(newGamePanel);
 
-        // Revalidate and repaint the window
-        window.revalidate();
-        window.repaint();
-        // Start the new game thread
-        newGamePanel.startGameThread();
+    // Revalidate and repaint the window
+    window.revalidate();
+    window.repaint();
+    // Start the new game thread
+    newGamePanel.startGameThread();
 
 
-        //--test startknapp....-----
+    //--test startknapp....-----
 
-        gameRunning = false;
-        gamePaused = true; //--test startknapp-----
-        startButton.setEnabled(true); // Aktivera startknappen igen
-        this.remove(startButton); // Ta bort den befintliga startknappen
-        startButton = null; // Nollställ startknappen
+    gameRunning = false;
+    gamePaused = true; //--test startknapp-----
+    startButton.setEnabled(true); // Aktivera startknappen igen
+    this.remove(startButton); // Ta bort den befintliga startknappen
+    startButton = null; // Nollställ startknappen
 
+}
+
+public void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    Graphics2D g2 = (Graphics2D) g;
+    g.drawImage(backGroundImage, 0, 0, getWidth(), getHeight(), this);
+    g2.drawImage(ImagePanel.playerImage, playerX, playerY, this);
+
+    for (Pipes pipe : pipes) {
+        int pipeX = pipe.getX();
+        int upperPipeY = pipe.getUpperPipeY();
+        int lowerPipeY = pipe.getLowerPipeY();
+
+        // Draw upper pipe
+        g2.drawImage(ImagePanel.upperPipe, pipeX, upperPipeY, this);
+
+        // Draw lower pipe
+        g2.drawImage(ImagePanel.lowerPipe, pipeX, lowerPipeY, this);
     }
-
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
-        g.drawImage(backGroundImage, 0, 0, getWidth(), getHeight(), this);
-        g2.drawImage(ImagePanel.playerImage, playerX, playerY, this);
-
-        for (Pipes pipe : pipes) {
-            int pipeX = pipe.getX();
-            int upperPipeY = pipe.getUpperPipeY();
-            int lowerPipeY = pipe.getLowerPipeY();
-
-            // Draw upper pipe
-            g2.drawImage(ImagePanel.upperPipe, pipeX, upperPipeY, this);
-
-            // Draw lower pipe
-            g2.drawImage(ImagePanel.lowerPipe, pipeX, lowerPipeY, this);
-        }
-        this.requestFocusInWindow();
-    }
+    this.requestFocusInWindow();
+}
 }
  
