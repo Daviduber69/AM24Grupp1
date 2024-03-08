@@ -26,13 +26,13 @@ import java.awt.event.ActionListener;
         setLocationRelativeTo(null);
         setResizable(false);
 
-        JLabel label = new JLabel("Start Game");
+        JLabel label = new JLabel("Choose Difficulty");
 
-        JButton startButton = new JButton("Start Game");
-        startButton.setBounds(10, 10, 10, 10);
-        startButton.addActionListener(e -> startGame());
-        add(startButton);
-        startButton.setVisible(true);
+        JButton easyButton = new JButton("Easy");
+        easyButton.setBounds(10, 10, 10, 10);
+        easyButton.addActionListener(e -> startGame());
+        add(easyButton);
+        easyButton.setVisible(true);
 
     }
     private void startGame() {
