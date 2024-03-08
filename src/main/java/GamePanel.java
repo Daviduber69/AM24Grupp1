@@ -76,8 +76,12 @@ public class GamePanel extends JPanel implements Runnable {
     In this method you regulate the appropriate variables
     to increase or decrease difficulty of the given GamePanel object.
      */
-    public void setDifficulty(String difficulty) {
-
+    public boolean setDifficulty(String difficulty) {
+        if (difficulty.equalsIgnoreCase("hard")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -128,7 +132,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     //add pipes pipes with startng coordinate values, for easy mode they spawn at the same coordinates
     //in update() spawn new pipes every 4 seconds
-    private void initializePipes() {
+    private void initializePipesHard() {
         Random random = new Random();
         int lowerY = 1000;
         int upperY = random.nextInt(400) - 800 + 50;
@@ -136,6 +140,21 @@ public class GamePanel extends JPanel implements Runnable {
         pipes.add(new Pipes(screenWidth, upperY, lowerY, false));
     }
 
+    private void initializePipesEasy() {
+        Random random = new Random();
+        int lowerY = 900;
+        int upperY = random.nextInt(200) - 800 + 50;
+        lowerY = upperY + lowerY + 200;
+        pipes.add(new Pipes(screenWidth, upperY, lowerY, false));
+    }
+
+    public void initializePipes() {
+        if (setDifficulty("hard")) {
+            initializePipesHard();
+        } else {
+            initializePipesEasy();
+        }
+    }
 
     // checks if spacebar is pressed and released
     // then calls the resetSpacebarReleased method which is set to false as default
@@ -161,7 +180,7 @@ public class GamePanel extends JPanel implements Runnable {
             Rectangle playerRect = new Rectangle(playerX + 35, playerY + 35, playerWidth - 82, playerHeight - 50);
             Rectangle upperPipeRect = new Rectangle(pipeX, upperPipeY, pipeWidth + 10, pipeHeight + 20);
             Rectangle lowerPipeRect = new Rectangle(pipeX, lowerPipeY, pipeWidth + 10, pipeHeight + 20);
-            if (pipeX  <= playerX && !pipe.isPassed()) {
+            if (pipeX <= playerX && !pipe.isPassed()) {
                 score++;
                 pipe.setPassed(true);
                 playerScore.setText("" + score);
