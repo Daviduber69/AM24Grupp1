@@ -15,6 +15,7 @@
      */
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 
     public class GameMenu extends JFrame {
@@ -25,6 +26,7 @@ import java.awt.event.ActionListener;
         setSize(60, 200);
         setLocationRelativeTo(null);
         setResizable(false);
+        setLayout(new FlowLayout());                            //Using flowlayout to automaticly set buttons relativ to window and each other
 
         JLabel label = new JLabel("Choose Difficulty");
 
@@ -33,6 +35,12 @@ import java.awt.event.ActionListener;
         easyButton.addActionListener(e -> startGame());
         add(easyButton);
         easyButton.setVisible(true);
+
+        JButton normalButton = new JButton("Normal");
+        normalButton.setBounds(10, 10, 10, 10);
+        normalButton.addActionListener(e -> startGame());
+        add(normalButton);
+        normalButton.setVisible(true);
 
     }
     private void startGame() {
