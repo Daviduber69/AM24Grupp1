@@ -73,6 +73,10 @@ public class GamePanel extends JPanel implements Runnable {
         initializeStartButton(); // Call the method to initialize the start button -- test för startknapp
     }
 
+    public void setDifficulty(String difficulty) {
+
+    }
+
     /**
      * Allocates a new Thread object
      * and causes this thread to begin execution

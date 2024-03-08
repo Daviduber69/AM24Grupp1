@@ -26,24 +26,24 @@ import java.awt.event.ActionListener;
         setSize(60, 200);
         setLocationRelativeTo(null);
         setResizable(false);
-        setLayout(new FlowLayout());                            //Using flowlayout to automaticly set buttons relativ to window and each other
+        setLayout(new FlowLayout()); //Using flowlayout to automaticly set buttons relativ to window and each other
 
         JLabel label = new JLabel("Choose Difficulty");
 
         JButton easyButton = new JButton("Easy");
         easyButton.setBounds(10, 10, 10, 10);
-        easyButton.addActionListener(e -> startGame());
+        easyButton.addActionListener(e -> startGame("easy"));
         add(easyButton);
         easyButton.setVisible(true);
 
         JButton normalButton = new JButton("Normal");
         normalButton.setBounds(10, 10, 10, 10);
-        normalButton.addActionListener(e -> startGame());
+        normalButton.addActionListener(e -> startGame("normal"));
         add(normalButton);
         normalButton.setVisible(true);
 
     }
-    private void startGame() {
+    private void startGame(String difficulty) {
         dispose();                                              // closes previous JFrame-object
         JFrame window = new JFrame();                           // Creates a new window
         GamePanel gamePanel = new GamePanel();                  // Creates a new GamePanel
@@ -55,6 +55,7 @@ import java.awt.event.ActionListener;
         window.setLocationRelativeTo(null);                     // Center the window
         window.setVisible(true);                                // Makes the window visable for the user
         window.requestFocus();                                  // Allowing the user to interact with the window
+        gamePanel.setDifficulty(difficulty);
         gamePanel.startGameThread();                             // starting gameThread
     }
 }
