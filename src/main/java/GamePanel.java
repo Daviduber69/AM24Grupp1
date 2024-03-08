@@ -12,10 +12,10 @@ public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16; // 16x16
     final int scale = 3;
     final int tileSize = originalTileSize * scale; // 16x3 = 48px
-    final int maxScreenColumn = 24;
-    final int maxScreenRow = 36;
-    final int screenWidth = tileSize * maxScreenColumn; // 48*24px = 1152 px
-    final int screenHeight = tileSize * maxScreenRow; // 48*36 px = 1728 px
+    final int maxScreenColumn = 18;
+    final int maxScreenRow = 24;
+    final int screenWidth = tileSize * maxScreenRow; // 48*24px = 1152 px
+    final int screenHeight = tileSize * maxScreenColumn; // 48*36 px = 1728 px
     Image backGroundImage;
     private JLabel highscore;
     private JLabel playerScore;
@@ -143,7 +143,7 @@ public class GamePanel extends JPanel implements Runnable {
     // Bird doesn't move further down when at the bottom of the screen
 
     public void update() {
-        long pipeSpawnInterval = 2500;
+        long pipeSpawnInterval = 2800;
         if (System.currentTimeMillis() - lastPipeSpawnTime >= pipeSpawnInterval) {
             initializePipes();
             lastPipeSpawnTime = System.currentTimeMillis();
@@ -153,7 +153,7 @@ public class GamePanel extends JPanel implements Runnable {
         playerScore.setText(String.valueOf(score));
         // Move the pipes to the left
         for (Pipes pipe : pipes) {
-            pipe.setX(pipe.getX() - 3);
+            pipe.setX((pipe.getX() - 4));
             int pipeX = pipe.getX();
             int upperPipeY = pipe.getUpperPipeY();
             int lowerPipeY = pipe.getLowerPipeY();
@@ -248,6 +248,7 @@ public void startGame() {
 
 private void resetGame() {
     musicLoop.stop();
+    deathSound.stop();
     gameThread.interrupt();// Interrupt the current thread if it's still running
 
     initializeStartButton();
