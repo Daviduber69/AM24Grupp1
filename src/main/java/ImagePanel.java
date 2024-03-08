@@ -12,10 +12,11 @@ public class ImagePanel extends JPanel {
     public ImagePanel() {
         try {
             playerImage = ImageIO.read(new File("pixelRam3.png"));
-            upperPipe = ImageIO.read(new File("dubbelburkUppOchNer.png"));
-            lowerPipe = ImageIO.read(new File("dubbelburk.png"));
+            upperPipe = ImageIO.read(new File("trippelburkVand.png"));
+            lowerPipe = ImageIO.read(new File("trippelburk.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 }
+ 
