@@ -12,10 +12,10 @@ public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16; // 16x16
     final int scale = 3;
     final int tileSize = originalTileSize * scale; // 16x3 = 48px
-    final int maxScreenColumn = 18;
+    final int maxScreenColumn = 24;
     final int maxScreenRow = 24;
     final int screenWidth = tileSize * maxScreenRow; // 48*24px = 1152 px
-    final int screenHeight = tileSize * maxScreenColumn; // 48*36 px = 1728 px
+    final int screenHeight = tileSize * maxScreenColumn; // 48*24 px = 1152 px
     Image backGroundImage;
     private JLabel highscore;
     private JLabel playerScore;
@@ -131,8 +131,8 @@ public class GamePanel extends JPanel implements Runnable {
     //in update() spawn new pipes every 4 seconds
     private void initializePipes() {
         Random random = new Random();
-        int lowerY = 750;
-        int upperY = random.nextInt((200 + 100) + 1) - 100;
+        int lowerY = 710;
+       int upperY = random.nextInt((80 + 480) + 1) - 480;
         lowerY = lowerY + upperY;
         pipes.add(new Pipes(1152, upperY, lowerY, false));
     }
@@ -247,8 +247,6 @@ public void startGame() {
 
 
 private void resetGame() {
-    musicLoop.stop();
-    deathSound.stop();
     gameThread.interrupt();// Interrupt the current thread if it's still running
 
     initializeStartButton();
@@ -276,7 +274,7 @@ private void resetGame() {
     startButton.setEnabled(true); // Aktivera startknappen igen
     this.remove(startButton); // Ta bort den befintliga startknappen
     startButton = null; // Nollställ startknappen
-
+    musicLoop.stop();
 }
 
 public void paintComponent(Graphics g) {
