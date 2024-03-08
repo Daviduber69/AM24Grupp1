@@ -123,7 +123,7 @@ public class GamePanel extends JPanel implements Runnable {
     //in update() spawn new pipes every 4 seconds
     private void initializePipes() {
         Random random = new Random();
-        int lowerY = 500;
+        int lowerY = 750;
         int upperY = random.nextInt((200 + 100) + 1) - 100;
         lowerY = lowerY + upperY;
         pipes.add(new Pipes(1152, upperY, lowerY, false));
