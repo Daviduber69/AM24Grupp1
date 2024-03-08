@@ -73,6 +73,10 @@ public class GamePanel extends JPanel implements Runnable {
         initializeStartButton(); // Call the method to initialize the start button -- test för startknapp
     }
 
+    /*
+    In this method you regulate the appropriate variables
+    to increase or decrease difficulty of the given GamePanel object.
+     */
     public void setDifficulty(String difficulty) {
 
     }
