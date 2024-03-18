@@ -1,14 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
-
-// nya imports för startknapp----
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class GamePanel extends JPanel implements Runnable {
-    GameMenu gameMenu ;
     final int originalTileSize = 16; // 16x16
     final int scale = 3;
     final int tileSize = originalTileSize * scale; // 16x3 = 48px
@@ -53,7 +48,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         this.requestFocusInWindow();
         images = new ImagePanel();
-        initializePipes();
         deathSound = new SoundPlayer("death.wav", false);
         musicLoop = new SoundPlayer("questsong-.wav", true);
         playerScore = new JLabel("");
@@ -68,7 +62,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.add(playerScore);
         this.add(highscore);
         backGroundImage = new ImageIcon("office.jpg").getImage();
-
     }
     /*
     In this method you regulate the appropriate variables
@@ -224,8 +217,6 @@ public class GamePanel extends JPanel implements Runnable {
             resetGame();
         }
     }
-
-
     private void resetGame() {
         gameThread.interrupt();
         musicLoop.stop();
