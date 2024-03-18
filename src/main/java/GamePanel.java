@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class GamePanel extends JPanel implements Runnable {
+    GameMenu gameMenu ;
     final int originalTileSize = 16; // 16x16
     final int scale = 3;
     final int tileSize = originalTileSize * scale; // 16x3 = 48px
@@ -20,10 +21,6 @@ public class GamePanel extends JPanel implements Runnable {
     private JLabel playerScore;
     private SoundPlayer deathSound;
     private SoundPlayer musicLoop;
-
-    private JButton startButton; // startknapp test----
-    private boolean gameRunning = false; // Deklarera och initialisera gameRunning här -- startknapp test
-    private boolean gamePaused = true;
     ImagePanel images;
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
@@ -69,17 +66,17 @@ public class GamePanel extends JPanel implements Runnable {
         this.add(playerScore);
         this.add(highscore);
         backGroundImage = new ImageIcon("office.jpg").getImage();
-        initializeStartButton(); // Call the method to initialize the start button -- test för startknapp
-    }
 
+    }
     /*
     In this method you regulate the appropriate variables
     to increase or decrease difficulty of the given GamePanel object.
      */
-    private String currentDifficulty ="";
+
+    public String difficulty = "easy";
 
     public void setDifficulty(String difficulty) {
-        currentDifficulty = difficulty;
+        this.difficulty = difficulty;
     }
 
     private void initializePipesHard() {
@@ -99,9 +96,9 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void initializePipes() {
-        if (currentDifficulty.equalsIgnoreCase("normal")) {
+        if (difficulty.equalsIgnoreCase("normal")) {
             initializePipesHard();
-        } else if(currentDifficulty.equalsIgnoreCase("easy")){
+        } else if (difficulty.equalsIgnoreCase("easy")) {
             initializePipesEasy();
         }
     }
@@ -162,7 +159,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         long pipeSpawnInterval;
-        if (currentDifficulty.equalsIgnoreCase("normal")) {
+        if (difficulty.equalsIgnoreCase("normal")) {
             pipeSpawnInterval = 3000;
         } else {
             pipeSpawnInterval = 5000;
@@ -176,7 +173,7 @@ public class GamePanel extends JPanel implements Runnable {
         playerScore.setText(String.valueOf(score));
         // Move the pipes to the left
         for (Pipes pipe : pipes) {
-            if (currentDifficulty.equalsIgnoreCase("normal")) {
+            if (difficulty.equalsIgnoreCase("normal")) {
 
                 pipe.setX((pipe.getX() - 4));
             } else {
@@ -204,8 +201,6 @@ public class GamePanel extends JPanel implements Runnable {
                 pipe.setPassed(false);
             }
         }
-
-
         // Handle player movement
         if (keyHandler.isSpacebarPress()) {
             // Jumping: Apply acceleration upwards
@@ -228,71 +223,16 @@ public class GamePanel extends JPanel implements Runnable {
             deathSound.play();
             resetGame();
         }
-        //test startknapp ---
-        if (gameRunning && playerY >= screenHeight - tileSize) {
-            gameRunning = false; // Avbryt spelet
-        }
-        if (!gameRunning || gamePaused) { //---test startknapp
-            return; // Om spelet inte körs eller är pausat, avbryt uppdateringen
-        }
-    }
-
-
-    //Test för startknapp
-    public void initializeStartButton() {
-        startButton = new JButton("Start"); // Create the start button
-        startButton.setFont(new Font("Arial", Font.BOLD, 20));
-        startButton.setFocusPainted(false);
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                startGame(); // Call the method to start the game when the button is clicked
-            }
-        });
-        this.add(startButton); // Add the start button to the panel
-    }
-
-    // also tillagd för  test av startknapp
-    public void startGame() {
-        // Kontrollera om spelet redan körs för att undvika flera startknappar
-        if (!gameRunning) {
-            startButton.setEnabled(false); // Inaktivera startknappen när spelet startar
-            gameRunning = true; // Markera att spelet körs
-            gamePaused = false; // Markera att spelet inte är pausat längre
-            startGameThread(); // Starta spelet
-        }
     }
 
 
     private void resetGame() {
-        gameThread.interrupt();// Interrupt the current thread if it's still running
-
-        initializeStartButton();
-        // Create a new JFrame instance
-        JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
-        window.getContentPane().removeAll(); // Remove all components from the window
-
-        // Create a new GamePanel instance
-        GamePanel newGamePanel = new GamePanel();
-
-        // Add the newGamePanel to the window
-        window.add(newGamePanel);
-
-        // Revalidate and repaint the window
-        window.revalidate();
-        window.repaint();
-        // Start the new game thread
-        newGamePanel.startGameThread();
-        setDifficulty(currentDifficulty);
-
-        //--test startknapp....-----
-
-        gameRunning = false;
-        gamePaused = true; //--test startknapp-----
-        startButton.setEnabled(true); // Aktivera startknappen igen
-        this.remove(startButton); // Ta bort den befintliga startknappen
-        startButton = null; // Nollställ startknappen
+        gameThread.interrupt();
         musicLoop.stop();
+        SwingUtilities.invokeLater(() -> {      // skapar trådsäkerhet
+            GameMenu menu = new GameMenu();     // skapar menyobjekt
+            menu.setVisible(true);              // sätter fönster till synligt
+        });
     }
 
     public void paintComponent(Graphics g) {

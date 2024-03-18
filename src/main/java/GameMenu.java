@@ -43,7 +43,7 @@ import java.awt.event.ActionListener;
         normalButton.setVisible(true);
 
     }
-    private void startGame(String difficulty) {
+    public void startGame(String difficulty) {
         dispose();                                              // closes previous JFrame-object
         JFrame window = new JFrame();                           // Creates a new window
         GamePanel gamePanel = new GamePanel();                  // Creates a new GamePanel
