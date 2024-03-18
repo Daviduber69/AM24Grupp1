@@ -39,12 +39,14 @@ public class GamePanel extends JPanel implements Runnable {
     private final List<Pipes> pipes = new ArrayList<>();
     Highscore highscoreList = new Highscore();
 
+    private String difficulty = "";
     /**
      * Constructor to set dimensions of window,
      * background color and also sets whether this
      * component should use a buffer to paint.
      */
-    public GamePanel() {
+    public GamePanel(String difficulty) {
+        setDifficulty(difficulty);
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
@@ -73,8 +75,6 @@ public class GamePanel extends JPanel implements Runnable {
     to increase or decrease difficulty of the given GamePanel object.
      */
 
-    public String difficulty = "easy";
-
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
     }
@@ -96,7 +96,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void initializePipes() {
-        if (difficulty.equalsIgnoreCase("normal")) {
+        if (difficulty.equalsIgnoreCase("hard")) {
             initializePipesHard();
         } else if (difficulty.equalsIgnoreCase("easy")) {
             initializePipesEasy();

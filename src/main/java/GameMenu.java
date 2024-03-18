@@ -36,9 +36,9 @@ import java.awt.event.ActionListener;
         add(easyButton);
         easyButton.setVisible(true);
 
-        JButton normalButton = new JButton("Normal");
+        JButton normalButton = new JButton("Hard");
         normalButton.setBounds(10, 10, 10, 10);
-        normalButton.addActionListener(e -> startGame("normal"));
+        normalButton.addActionListener(e -> startGame("hard"));
         add(normalButton);
         normalButton.setVisible(true);
 
