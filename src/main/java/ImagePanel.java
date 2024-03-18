@@ -11,7 +11,7 @@ public class ImagePanel extends JPanel {
     public static Image lowerPipe;
     public ImagePanel() {
         try {
-            playerImage = ImageIO.read(new File("pixelRam3.png"));
+            playerImage = Toolkit.getDefaultToolkit().createImage("hamramsnabbare.gif");
             upperPipe = ImageIO.read(new File("trippelburkVand.png"));
             lowerPipe = ImageIO.read(new File("trippelburk.png"));
         } catch (IOException e) {
