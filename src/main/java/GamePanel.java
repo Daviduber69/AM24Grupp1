@@ -76,11 +76,33 @@ public class GamePanel extends JPanel implements Runnable {
     In this method you regulate the appropriate variables
     to increase or decrease difficulty of the given GamePanel object.
      */
-    public boolean setDifficulty(String difficulty) {
-        if (difficulty.equalsIgnoreCase("hard")) {
-            return true;
-        } else {
-            return false;
+    private String currentDifficulty ="";
+
+    public void setDifficulty(String difficulty) {
+        currentDifficulty = difficulty;
+    }
+
+    private void initializePipesHard() {
+        Random random = new Random();
+        int lowerY = 1000;
+        int upperY = random.nextInt(400) - 800 + 50;
+        lowerY = upperY + lowerY;
+        pipes.add(new Pipes(screenWidth, upperY, lowerY, false));
+    }
+
+    private void initializePipesEasy() {
+        Random random = new Random();
+        int lowerY = 900;
+        int upperY = random.nextInt(200) - 800 + 50;
+        lowerY = upperY + lowerY + 200;
+        pipes.add(new Pipes(screenWidth, upperY, lowerY, false));
+    }
+
+    public void initializePipes() {
+        if (currentDifficulty.equalsIgnoreCase("normal")) {
+            initializePipesHard();
+        } else if(currentDifficulty.equalsIgnoreCase("easy")){
+            initializePipesEasy();
         }
     }
 
@@ -132,36 +154,19 @@ public class GamePanel extends JPanel implements Runnable {
 
     //add pipes pipes with startng coordinate values, for easy mode they spawn at the same coordinates
     //in update() spawn new pipes every 4 seconds
-    private void initializePipesHard() {
-        Random random = new Random();
-        int lowerY = 1000;
-        int upperY = random.nextInt(400) - 800 + 50;
-        lowerY = upperY + lowerY;
-        pipes.add(new Pipes(screenWidth, upperY, lowerY, false));
-    }
 
-    private void initializePipesEasy() {
-        Random random = new Random();
-        int lowerY = 900;
-        int upperY = random.nextInt(200) - 800 + 50;
-        lowerY = upperY + lowerY + 200;
-        pipes.add(new Pipes(screenWidth, upperY, lowerY, false));
-    }
-
-    public void initializePipes() {
-        if (setDifficulty("hard")) {
-            initializePipesHard();
-        } else {
-            initializePipesEasy();
-        }
-    }
 
     // checks if spacebar is pressed and released
     // then calls the resetSpacebarReleased method which is set to false as default
     // Bird doesn't move further down when at the bottom of the screen
 
     public void update() {
-        long pipeSpawnInterval = 3000;
+        long pipeSpawnInterval;
+        if (currentDifficulty.equalsIgnoreCase("normal")) {
+            pipeSpawnInterval = 3000;
+        } else {
+            pipeSpawnInterval = 5000;
+        }
         if (System.currentTimeMillis() - lastPipeSpawnTime >= pipeSpawnInterval) {
             initializePipes();
             lastPipeSpawnTime = System.currentTimeMillis();
@@ -171,7 +176,12 @@ public class GamePanel extends JPanel implements Runnable {
         playerScore.setText(String.valueOf(score));
         // Move the pipes to the left
         for (Pipes pipe : pipes) {
-            pipe.setX((pipe.getX() - 4));
+            if (currentDifficulty.equalsIgnoreCase("normal")) {
+
+                pipe.setX((pipe.getX() - 4));
+            } else {
+                pipe.setX((pipe.getX() - 3));
+            }
             int pipeX = pipe.getX();
             int upperPipeY = pipe.getUpperPipeY();
             int lowerPipeY = pipe.getLowerPipeY();
@@ -273,7 +283,7 @@ public class GamePanel extends JPanel implements Runnable {
         window.repaint();
         // Start the new game thread
         newGamePanel.startGameThread();
-
+        setDifficulty(currentDifficulty);
 
         //--test startknapp....-----
 
