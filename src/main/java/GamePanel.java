@@ -152,7 +152,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         long pipeSpawnInterval;
-        if (difficulty.equalsIgnoreCase("normal")) {
+        if (difficulty.equalsIgnoreCase("hard")) {
             pipeSpawnInterval = 3000;
         } else {
             pipeSpawnInterval = 5000;
@@ -166,8 +166,7 @@ public class GamePanel extends JPanel implements Runnable {
         playerScore.setText(String.valueOf(score));
         // Move the pipes to the left
         for (Pipes pipe : pipes) {
-            if (difficulty.equalsIgnoreCase("normal")) {
-
+            if (difficulty.equalsIgnoreCase("hard")) {
                 pipe.setX((pipe.getX() - 4));
             } else {
                 pipe.setX((pipe.getX() - 3));
