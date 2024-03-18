@@ -42,12 +42,15 @@ public class GamePanel extends JPanel implements Runnable {
     private final List<Pipes> pipes = new ArrayList<>();
     Highscore highscoreList = new Highscore();
 
+    private String difficulty = "";
+
     /**
      * Constructor to set dimensions of window,
      * background color and also sets whether this
      * component should use a buffer to paint.
      */
-    public GamePanel() {
+    public GamePanel(String difficulty) {
+        this.setDifficulty(difficulty);
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
@@ -76,10 +79,13 @@ public class GamePanel extends JPanel implements Runnable {
     In this method you regulate the appropriate variables
     to increase or decrease difficulty of the given GamePanel object.
      */
-    private String currentDifficulty ="";
 
     public void setDifficulty(String difficulty) {
-        currentDifficulty = difficulty;
+        if (difficulty.equals("easy")) {
+            this.difficulty = "easy";
+        } else if (difficulty.equals("normal")) {
+            this.difficulty = "normal";
+        }
     }
 
     private void initializePipesHard() {
@@ -99,9 +105,9 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void initializePipes() {
-        if (currentDifficulty.equalsIgnoreCase("normal")) {
+        if (difficulty.equalsIgnoreCase("normal")) {
             initializePipesHard();
-        } else if(currentDifficulty.equalsIgnoreCase("easy")){
+        } else if(difficulty.equalsIgnoreCase("easy")){
             initializePipesEasy();
         }
     }
@@ -162,7 +168,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         long pipeSpawnInterval;
-        if (currentDifficulty.equalsIgnoreCase("normal")) {
+        if (difficulty.equalsIgnoreCase("normal")) {
             pipeSpawnInterval = 3000;
         } else {
             pipeSpawnInterval = 5000;
@@ -176,7 +182,7 @@ public class GamePanel extends JPanel implements Runnable {
         playerScore.setText(String.valueOf(score));
         // Move the pipes to the left
         for (Pipes pipe : pipes) {
-            if (currentDifficulty.equalsIgnoreCase("normal")) {
+            if (difficulty.equalsIgnoreCase("normal")) {
 
                 pipe.setX((pipe.getX() - 4));
             } else {
@@ -273,7 +279,7 @@ public class GamePanel extends JPanel implements Runnable {
         window.getContentPane().removeAll(); // Remove all components from the window
 
         // Create a new GamePanel instance
-        GamePanel newGamePanel = new GamePanel();
+        GamePanel newGamePanel = new GamePanel(difficulty);
 
         // Add the newGamePanel to the window
         window.add(newGamePanel);
@@ -283,7 +289,7 @@ public class GamePanel extends JPanel implements Runnable {
         window.repaint();
         // Start the new game thread
         newGamePanel.startGameThread();
-        setDifficulty(currentDifficulty);
+        setDifficulty(difficulty);
 
         //--test startknapp....-----
 

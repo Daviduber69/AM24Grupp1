@@ -46,7 +46,7 @@ import java.awt.event.ActionListener;
     private void startGame(String difficulty) {
         dispose();                                              // closes previous JFrame-object
         JFrame window = new JFrame();                           // Creates a new window
-        GamePanel gamePanel = new GamePanel();                  // Creates a new GamePanel
+        GamePanel gamePanel = new GamePanel(difficulty);        // Creates a new GamePanel
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Makes closing on demand available
         window.setResizable(false);                             // Sets this frame not resizable by the user.
         window.setTitle("Jumpy Birb");                          // Set title
@@ -55,7 +55,7 @@ import java.awt.event.ActionListener;
         window.setLocationRelativeTo(null);                     // Center the window
         window.setVisible(true);                                // Makes the window visable for the user
         window.requestFocus();                                  // Allowing the user to interact with the window
-        gamePanel.setDifficulty(difficulty);
+      //  gamePanel.setDifficulty(difficulty);
         gamePanel.startGameThread();                             // starting gameThread
     }
 }
