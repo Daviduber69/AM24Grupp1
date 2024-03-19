@@ -35,6 +35,7 @@ public class GamePanel extends JPanel implements Runnable {
     Highscore highscoreList = new Highscore();
 
     private String difficulty = "";
+
     /**
      * Constructor to set dimensions of window,
      * background color and also sets whether this
@@ -216,13 +217,25 @@ public class GamePanel extends JPanel implements Runnable {
             resetGame();
         }
     }
+
     private void resetGame() {
-        gameThread.interrupt();
-        musicLoop.stop();
-        SwingUtilities.invokeLater(() -> {      // skapar trådsäkerhet
-            GameMenu menu = new GameMenu();     // skapar menyobjekt
-            menu.setVisible(true);              // sätter fönster till synligt
-        });
+        gameThread.interrupt();// Interrupt the current thread if it's still running
+        // Create a new JFrame instance
+        JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
+        window.getContentPane().removeAll(); // Remove all components from the window
+
+        // Create a new GamePanel instance
+        GamePanel newGamePanel = new GamePanel(difficulty);
+
+        // Add the newGamePanel to the window
+        window.add(newGamePanel);
+
+        // Revalidate and repaint the window
+        window.revalidate();
+        window.repaint();
+        // Start the new game thread
+        newGamePanel.startGameThread();
+
     }
 
     public void paintComponent(Graphics g) {
