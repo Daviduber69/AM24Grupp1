@@ -7,6 +7,6 @@ public class  Main {
                 GameMenu menu = new GameMenu();     // skapar menyobjekt
                 menu.setVisible(true);              // sätter fönster till synligt
             });
-        }
+        } 
     }
 
