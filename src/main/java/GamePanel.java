@@ -4,9 +4,6 @@ import java.util.*;
 import java.util.List;
 
 public class GamePanel extends JPanel implements Runnable {
-    //----------------------USING FLAG-TESTING-------------------------//
-    private boolean testingRestartFeature = false;
-    // ---------------------USING FLAG-TESTING-------------------------//
     final int originalTileSize = 16; // 16x16
     final int scale = 3;
     final int tileSize = originalTileSize * scale; // 16x3 = 48px
