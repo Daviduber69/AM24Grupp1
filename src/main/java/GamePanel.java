@@ -231,7 +231,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void resetGame() {
-        gameThread.interrupt();
+
         musicLoop.stop();
 
         gameThread.interrupt();// Interrupt the current thread if it's still running
