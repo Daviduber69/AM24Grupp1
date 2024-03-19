@@ -219,9 +219,9 @@ public class GamePanel extends JPanel implements Runnable {
     private void resetGame() {
         gameThread.interrupt();
         musicLoop.stop();
-        SwingUtilities.invokeLater(() -> {      // skapar trådsäkerhet
-            GameMenu menu = new GameMenu();     // skapar menyobjekt
-            menu.setVisible(true);              // sätter fönster till synligt
+        SwingUtilities.invokeLater(() -> {                      // skapar trådsäkerhet
+            RestartWindow restart = new RestartWindow();        // skapar nytt restartMenu objekt
+            restart.setVisible(true);                           // sätter fönster till synligt
         });
     }
 
