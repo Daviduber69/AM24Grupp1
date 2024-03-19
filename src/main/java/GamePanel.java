@@ -75,7 +75,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     private void initializePipesHard() {
         Random random = new Random();
-        int lowerY = 1000;
+        int lowerY = 1025;
         int upperY = random.nextInt(400) - 800 + 50;
         lowerY = upperY + lowerY;
         pipes.add(new Pipes(screenWidth, upperY, lowerY, false));
@@ -154,23 +154,27 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         long pipeSpawnInterval;
         if (difficulty.equalsIgnoreCase("hard")) {
-            pipeSpawnInterval = 2500;
+            pipeSpawnInterval = 2300;
+            highscoreList.saveHardHighscore();
+            highscore.setText(String.valueOf(highscoreList.printHardHighscore()));
+            playerScore.setText(String.valueOf(score));
         } else {
-            pipeSpawnInterval = 3000;
+            highscoreList.saveEasyHighscore();
+            highscore.setText(String.valueOf(highscoreList.printEasyHighscore()));
+            playerScore.setText(String.valueOf(score));
+            pipeSpawnInterval = 2800;
         }
         if (System.currentTimeMillis() - lastPipeSpawnTime >= pipeSpawnInterval) {
             initializePipes();
             lastPipeSpawnTime = System.currentTimeMillis();
         }
-        highscoreList.saveHighscore();
-        highscore.setText(String.valueOf(highscoreList.printHighscore()));
-        playerScore.setText(String.valueOf(score));
+
         // Move the pipes to the left
         for (Pipes pipe : pipes) {
             if (difficulty.equalsIgnoreCase("hard")) {
-                pipe.setX((pipe.getX() - 5));
+                pipe.setX((pipe.getX() - 6));
             } else {
-                pipe.setX((pipe.getX() - 4));
+                pipe.setX((pipe.getX() - 5));
             }
             int pipeX = pipe.getX();
             int upperPipeY = pipe.getUpperPipeY();
@@ -196,7 +200,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
         // Handle player movement
         if (keyHandler.isSpacebarPress()) {
-            // Jumping: Apply acceleration upwards
+            // Jumping acceleration
             playerSpeedY = -10; // You can adjust this value for smoother jumping
             playerY += (int) playerSpeedY;
             keyHandler.resetSpacebarReleased();
@@ -206,8 +210,8 @@ public class GamePanel extends JPanel implements Runnable {
                 playerY = 0;
             }
         } else {
-            // Falling or on the ground: Apply gravity
-            playerSpeedY += 0.5; // Gravity effect, you can adjust this value for more or less gravity
+            // Gravity
+            playerSpeedY += 0.5;
             playerY += (int) playerSpeedY;
         }
 

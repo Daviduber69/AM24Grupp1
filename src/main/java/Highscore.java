@@ -7,7 +7,8 @@ import java.util.List;
 
 public class Highscore {
     private final List<Integer> highscore;
-    Path filePath = Paths.get("highscore.txt");
+    Path filePathHard = Paths.get("hardhighscore.txt");
+    Path filePathEasy = Paths.get("easyhighscore.txt");
 
     public Highscore() {
         this.highscore = new ArrayList<>();
@@ -25,10 +26,10 @@ public class Highscore {
         return highscore.get(0);
     }
 
-    public void saveHighscore() {
-        if (Files.exists(filePath)) {
+    public void saveHardHighscore() {
+        if (Files.exists(filePathHard)) {
             try (
-                    BufferedWriter writer = Files.newBufferedWriter((filePath)
+                    BufferedWriter writer = Files.newBufferedWriter((filePathHard)
                             ,StandardCharsets.UTF_8
                             ,StandardOpenOption.APPEND)) {
                 if (showHighscore() > 0) {
@@ -41,17 +42,52 @@ public class Highscore {
             }
         } else {
             try {
-                Files.createFile(filePath);
+                Files.createFile(filePathHard);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public int printHighscore() {
+    public int printHardHighscore() {
         String line;
         int maxScore = 0;
-        try (BufferedReader inputReader = Files.newBufferedReader(filePath)) {
+        try (BufferedReader inputReader = Files.newBufferedReader(filePathHard)) {
+            while ((line = inputReader.readLine()) != null) {
+                int max = Integer.parseInt(line);
+                maxScore = Math.max(maxScore, max);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return maxScore;
+    }
+    public void saveEasyHighscore() {
+        if (Files.exists(filePathEasy)) {
+            try (
+                    BufferedWriter writer = Files.newBufferedWriter((filePathEasy)
+                            ,StandardCharsets.UTF_8
+                            ,StandardOpenOption.APPEND)) {
+                if (showHighscore() > 0) {
+                    writer.write(Integer.toString(showHighscore()));
+                    writer.newLine();
+                    highscore.clear();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            try {
+                Files.createFile(filePathEasy);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    public int printEasyHighscore() {
+        String line;
+        int maxScore = 0;
+        try (BufferedReader inputReader = Files.newBufferedReader(filePathEasy)) {
             while ((line = inputReader.readLine()) != null) {
                 int max = Integer.parseInt(line);
                 maxScore = Math.max(maxScore, max);
