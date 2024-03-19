@@ -58,7 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
         playerScore.setFont(new Font("Arial", Font.BOLD, 48));
         highscore.setForeground(Color.pink);
         highscore.setFont(new Font("Arial", Font.BOLD, 24));
-        highscore.setBounds(10, 10, 10, 10);
+        highscore.setBounds(400, 10, 100, 50);
         this.add(playerScore);
         this.add(highscore);
         backGroundImage = new ImageIcon("office.jpg").getImage();
@@ -153,9 +153,9 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         long pipeSpawnInterval;
         if (difficulty.equalsIgnoreCase("hard")) {
-            pipeSpawnInterval = 3000;
+            pipeSpawnInterval = 2500;
         } else {
-            pipeSpawnInterval = 5000;
+            pipeSpawnInterval = 3000;
         }
         if (System.currentTimeMillis() - lastPipeSpawnTime >= pipeSpawnInterval) {
             initializePipes();
@@ -167,9 +167,9 @@ public class GamePanel extends JPanel implements Runnable {
         // Move the pipes to the left
         for (Pipes pipe : pipes) {
             if (difficulty.equalsIgnoreCase("hard")) {
-                pipe.setX((pipe.getX() - 4));
+                pipe.setX((pipe.getX() - 5));
             } else {
-                pipe.setX((pipe.getX() - 3));
+                pipe.setX((pipe.getX() - 4));
             }
             int pipeX = pipe.getX();
             int upperPipeY = pipe.getUpperPipeY();
