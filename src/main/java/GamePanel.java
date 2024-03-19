@@ -216,7 +216,7 @@ public class GamePanel extends JPanel implements Runnable {
                 playerY = 0;
             }
         }
-            // Gravity starts after 1 second
+        // Gravity starts after 1 second
         if (System.currentTimeMillis() >= startTime + 1000) {
             playerSpeedY += 0.5;
             playerY += (int) playerSpeedY;
@@ -226,13 +226,16 @@ public class GamePanel extends JPanel implements Runnable {
         // Check if the player is on the ground
         if (playerY >= screenHeight - tileSize) {
             deathSound.play();
-            resetGame();
+            if (!testingRestartFeature) {
+                resetGame();
+            }
+            else if (testingRestartFeature) {
+                resetGame(difficulty);
+            }
         }
     }
 
-    private void resetGame() {
-
-    if (testingRestartFeature == false) {
+        private void resetGame () {
         musicLoop.stop();
 
         gameThread.interrupt();// Interrupt the current thread if it's still running
@@ -253,10 +256,11 @@ public class GamePanel extends JPanel implements Runnable {
         newGamePanel.startGameThread();
     }
 
-    else if (testingRestartFeature) {
-        RestartWindow restartWindow = new RestartWindow();
+    private void resetGame(String difficulty) {
+
     }
-    }
+
+
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
