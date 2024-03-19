@@ -4,6 +4,9 @@ import java.util.*;
 import java.util.List;
 
 public class GamePanel extends JPanel implements Runnable {
+    //----------------------USING FLAG-TESTING-------------------------//
+    private boolean testingRestartFeature = false;
+    // ---------------------USING FLAG-TESTING-------------------------//
     final int originalTileSize = 16; // 16x16
     final int scale = 3;
     final int tileSize = originalTileSize * scale; // 16x3 = 48px
@@ -35,6 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
     Highscore highscoreList = new Highscore();
 
     private String difficulty = "";
+
     /**
      * Constructor to set dimensions of window,
      * background color and also sets whether this
@@ -58,7 +62,7 @@ public class GamePanel extends JPanel implements Runnable {
         playerScore.setFont(new Font("Arial", Font.BOLD, 48));
         highscore.setForeground(Color.pink);
         highscore.setFont(new Font("Arial", Font.BOLD, 24));
-        highscore.setBounds(10, 10, 10, 10);
+        highscore.setBounds(400, 10, 100, 50);
         this.add(playerScore);
         this.add(highscore);
         backGroundImage = new ImageIcon("office.jpg").getImage();
@@ -74,7 +78,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     private void initializePipesHard() {
         Random random = new Random();
-        int lowerY = 1000;
+        int lowerY = 1025;
         int upperY = random.nextInt(400) - 800 + 50;
         lowerY = upperY + lowerY;
         pipes.add(new Pipes(screenWidth, upperY, lowerY, false));
@@ -153,23 +157,27 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         long pipeSpawnInterval;
         if (difficulty.equalsIgnoreCase("hard")) {
-            pipeSpawnInterval = 3000;
+            pipeSpawnInterval = 2300;
+            highscoreList.saveHardHighscore();
+            highscore.setText(String.valueOf(highscoreList.printHardHighscore()));
+            playerScore.setText(String.valueOf(score));
         } else {
-            pipeSpawnInterval = 5000;
+            highscoreList.saveEasyHighscore();
+            highscore.setText(String.valueOf(highscoreList.printEasyHighscore()));
+            playerScore.setText(String.valueOf(score));
+            pipeSpawnInterval = 2800;
         }
         if (System.currentTimeMillis() - lastPipeSpawnTime >= pipeSpawnInterval) {
             initializePipes();
             lastPipeSpawnTime = System.currentTimeMillis();
         }
-        highscoreList.saveHighscore();
-        highscore.setText(String.valueOf(highscoreList.printHighscore()));
-        playerScore.setText(String.valueOf(score));
+
         // Move the pipes to the left
         for (Pipes pipe : pipes) {
             if (difficulty.equalsIgnoreCase("hard")) {
-                pipe.setX((pipe.getX() - 4));
+                pipe.setX((pipe.getX() - 6));
             } else {
-                pipe.setX((pipe.getX() - 3));
+                pipe.setX((pipe.getX() - 5));
             }
             int pipeX = pipe.getX();
             int upperPipeY = pipe.getUpperPipeY();
@@ -195,7 +203,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
         // Handle player movement
         if (keyHandler.isSpacebarPress()) {
-            // Jumping: Apply acceleration upwards
+            // Jumping acceleration
             playerSpeedY = -10; // You can adjust this value for smoother jumping
             playerY += (int) playerSpeedY;
             keyHandler.resetSpacebarReleased();
@@ -205,8 +213,8 @@ public class GamePanel extends JPanel implements Runnable {
                 playerY = 0;
             }
         } else {
-            // Falling or on the ground: Apply gravity
-            playerSpeedY += 0.5; // Gravity effect, you can adjust this value for more or less gravity
+            // Gravity
+            playerSpeedY += 0.5;
             playerY += (int) playerSpeedY;
         }
 
@@ -216,13 +224,43 @@ public class GamePanel extends JPanel implements Runnable {
             resetGame();
         }
     }
+
     private void resetGame() {
         gameThread.interrupt();
         musicLoop.stop();
-        SwingUtilities.invokeLater(() -> {                      // skapar trådsäkerhet
-            RestartWindow restart = new RestartWindow();        // skapar nytt restartMenu objekt
-            restart.setVisible(true);                           // sätter fönster till synligt
-        });
+
+        if (testingRestartFeature == false){
+            SwingUtilities.invokeLater(() -> {                       // skapar trådsäkerhet
+                GameMenu gameMenu = new GameMenu();                  // skapar nytt gameMenu objekt
+                gameMenu.setVisible(true);                           // sätter fönster till synligt
+            });
+        }
+
+        else if (testingRestartFeature) {
+            SwingUtilities.invokeLater(() -> {                      // skapar trådsäkerhet
+                RestartWindow restart = new RestartWindow();        // skapar nytt restartMenu objekt
+//                restart.setVisible(true);                         // sätter fönster till synligt
+            });
+        }
+
+
+
+        gameThread.interrupt();// Interrupt the current thread if it's still running
+        // Create a new JFrame instance
+        JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
+        window.getContentPane().removeAll(); // Remove all components from the window
+
+        // Create a new GamePanel instance
+        GamePanel newGamePanel = new GamePanel(difficulty);
+
+        // Add the newGamePanel to the window
+        window.add(newGamePanel);
+
+        // Revalidate and repaint the window
+        window.revalidate();
+        window.repaint();
+        // Start the new game thread
+        newGamePanel.startGameThread();
     }
 
     public void paintComponent(Graphics g) {
