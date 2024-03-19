@@ -226,10 +226,10 @@ public class GamePanel extends JPanel implements Runnable {
         // Check if the player is on the ground
         if (playerY >= screenHeight - tileSize) {
             deathSound.play();
-            if (!testingRestartFeature) {
+            if (!testingRestartFeature) {           // previous build
                 resetGame();
             }
-            else if (testingRestartFeature) {
+            else if (testingRestartFeature) {       // new build
                 resetGame(difficulty);
             }
         }
