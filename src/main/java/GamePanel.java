@@ -232,6 +232,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     private void resetGame() {
 
+    if (testingRestartFeature == false) {
         musicLoop.stop();
 
         gameThread.interrupt();// Interrupt the current thread if it's still running
@@ -250,6 +251,11 @@ public class GamePanel extends JPanel implements Runnable {
         window.repaint();
         // Start the new game thread
         newGamePanel.startGameThread();
+    }
+
+    else if (testingRestartFeature) {
+        RestartWindow restartWindow = new RestartWindow();
+    }
     }
 
     public void paintComponent(Graphics g) {

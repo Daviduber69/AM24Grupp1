@@ -1,3 +1,5 @@
-public class RestartWindow {
+import javax.swing.*;
+
+public class RestartWindow extends JFrame {
 
 }
