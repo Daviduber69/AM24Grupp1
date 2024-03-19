@@ -225,10 +225,6 @@ public class GamePanel extends JPanel implements Runnable {
     private void resetGame() {
         gameThread.interrupt();
         musicLoop.stop();
-            SwingUtilities.invokeLater(() -> {                       // skapar trådsäkerhet
-                GameMenu gameMenu = new GameMenu();                  // skapar nytt gameMenu objekt
-                gameMenu.setVisible(true);                           // sätter fönster till synligt
-            });
 
         gameThread.interrupt();// Interrupt the current thread if it's still running
         // Create a new JFrame instance
