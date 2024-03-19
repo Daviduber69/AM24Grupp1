@@ -7,24 +7,28 @@ import java.awt.event.ActionListener;
 
     public GameMenu() {
         super("Game Menu");
-        setSize(60, 200);
+        setSize(500, 1000);
         setLocationRelativeTo(null);
         setResizable(false);
-        setLayout(new FlowLayout()); //Using flowlayout to automaticly set buttons relativ to window and each other
+        setLayout(new BorderLayout());
 
-        JLabel label = new JLabel("Choose Difficulty");
+        ImageIcon backgroundImage = new ImageIcon("office2.jpg");
+        JLabel backgroundLabel = new JLabel(backgroundImage);
+        add(backgroundLabel, BorderLayout.CENTER);
+
 
         JButton easyButton = new JButton("Easy");
-        easyButton.setBounds(10, 10, 10, 10);
+        add(easyButton, BorderLayout.WEST);
+        easyButton.setBackground(Color.GREEN);
+        easyButton.setFont(new Font("Arial", Font.BOLD, 48));
         easyButton.addActionListener(e -> startGame("easy"));
-        add(easyButton);
-        easyButton.setVisible(true);
 
-        JButton normalButton = new JButton("Hard");
-        normalButton.setBounds(10, 10, 10, 10);
-        normalButton.addActionListener(e -> startGame("hard"));
-        add(normalButton);
-        normalButton.setVisible(true);
+        JButton hardButton = new JButton("Hard");
+        add(hardButton, BorderLayout.EAST);
+        hardButton.setBackground(Color.RED);
+        hardButton.setFont(new Font("Arial", Font.BOLD, 48));
+        hardButton.addActionListener(e -> startGame("hard"));
+        setVisible(true);
 
     }
     public void startGame(String difficulty) {
