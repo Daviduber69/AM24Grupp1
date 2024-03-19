@@ -43,7 +43,6 @@ import java.awt.event.ActionListener;
         window.setLocationRelativeTo(null);                     // Center the window
         window.setVisible(true);                                // Makes the window visable for the user
         window.requestFocus();                                  // Allowing the user to interact with the window
-      //  gamePanel.setDifficulty(difficulty);
         gamePanel.startGameThread();                             // starting gameThread
     }
 }

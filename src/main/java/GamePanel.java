@@ -6,7 +6,7 @@ import java.util.List;
 public class GamePanel extends JPanel implements Runnable {
     // ------------------ FLAG-TESTING -------------------- //
 
-    private boolean testingRestartFeature = false;
+    private boolean testingRestartFeature = false;  // turn true to try new feature
 
     // ------------------ FLAG-TESTING -------------------- //
     final int originalTileSize = 16; // 16x16
@@ -257,7 +257,14 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void resetGame(String difficulty) {
-
+        musicLoop.stop();
+        gameThread.interrupt();
+        JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
+        window.getContentPane().removeAll(); // Remove all components from the window
+        window.dispose();
+        RestartWindow restartWindow = new RestartWindow(difficulty);
+        restartWindow.setVisible(true);
+        restartWindow.pack();
     }
 
 
