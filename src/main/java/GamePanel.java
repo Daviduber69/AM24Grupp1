@@ -150,6 +150,7 @@ public class GamePanel extends JPanel implements Runnable {
     // checks if spacebar is pressed and released
     // then calls the resetSpacebarReleased method which is set to false as default
     // Bird doesn't move further down when at the bottom of the screen
+    long startTime = System.currentTimeMillis();
 
     public void update() {
         long pipeSpawnInterval;
@@ -209,11 +210,13 @@ public class GamePanel extends JPanel implements Runnable {
             if (playerY < 0) {
                 playerY = 0;
             }
-        } else {
-            // Gravity
+        }
+            // Gravity starts after 1 second
+        if (System.currentTimeMillis() >= startTime + 1000) {
             playerSpeedY += 0.5;
             playerY += (int) playerSpeedY;
         }
+
 
         // Check if the player is on the ground
         if (playerY >= screenHeight - tileSize) {
