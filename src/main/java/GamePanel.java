@@ -235,9 +235,10 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-        private void resetGame () {
-        musicLoop.stop();
 
+        private void resetGame () {
+
+        musicLoop.stop();
         gameThread.interrupt();// Interrupt the current thread if it's still running
         // Create a new JFrame instance
         JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);

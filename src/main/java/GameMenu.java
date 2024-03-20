@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-    public class GameMenu extends JFrame {
+public class GameMenu extends JFrame {
     private GamePanel gamePanel;
 
     public GameMenu() {
@@ -31,6 +31,7 @@ import java.awt.event.ActionListener;
         setVisible(true);
 
     }
+
     public void startGame(String difficulty) {
         dispose();                                              // closes previous JFrame-object
         JFrame window = new JFrame();                           // Creates a new window
