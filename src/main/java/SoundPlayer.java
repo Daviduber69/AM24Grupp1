@@ -25,6 +25,12 @@ public class SoundPlayer {
 
     public void play() {
         if (clip != null) {
+            clip.setFramePosition(0);
+            try {
+                Thread.sleep(10); // Introduce a small delay
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             clip.start();
         }
     }

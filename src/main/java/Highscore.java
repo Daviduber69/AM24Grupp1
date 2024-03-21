@@ -49,18 +49,19 @@ public class Highscore {
         }
     }
 
-    public int printHardHighscore() {
+    public List<Integer> printHardHighscore() {
         String line;
-        int maxScore = 0;
+        List<Integer> hardHighscores = new ArrayList<>();
         try (BufferedReader inputReader = Files.newBufferedReader(filePathHard)) {
             while ((line = inputReader.readLine()) != null) {
-                int max = Integer.parseInt(line);
-                maxScore = Math.max(maxScore, max);
+                int score = Integer.parseInt(line);
+                hardHighscores.add(score);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return maxScore;
+        hardHighscores.sort(Collections.reverseOrder());
+        return hardHighscores.subList(0, Math.min(5,hardHighscores.size()));
     }
     public void saveEasyHighscore() {
         if (Files.exists(filePathEasy)) {
@@ -84,17 +85,18 @@ public class Highscore {
             }
         }
     }
-    public int printEasyHighscore() {
+    public List<Integer> printEasyHighscore() {
         String line;
-        int maxScore = 0;
+        List<Integer> easyHighscores = new ArrayList<>();
         try (BufferedReader inputReader = Files.newBufferedReader(filePathEasy)) {
             while ((line = inputReader.readLine()) != null) {
-                int max = Integer.parseInt(line);
-                maxScore = Math.max(maxScore, max);
+                int score = Integer.parseInt(line);
+                easyHighscores.add(score);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return maxScore;
+        easyHighscores.sort(Collections.reverseOrder());
+        return easyHighscores.subList(0, Math.min(5, easyHighscores.size()));
     }
 }

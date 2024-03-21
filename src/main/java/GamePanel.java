@@ -21,6 +21,7 @@ public class GamePanel extends JPanel implements Runnable {
     private JLabel playerScore;
     private SoundPlayer deathSound;
     private SoundPlayer musicLoop;
+    private SoundPlayer jumpSound;
     ImagePanel images;
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
@@ -54,7 +55,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         this.requestFocusInWindow();
         images = new ImagePanel();
-        deathSound = new SoundPlayer("death.wav", false);
+        deathSound = new SoundPlayer("OOFF.wav", false);
         musicLoop = new SoundPlayer("questsong-.wav", true);
         playerScore = new JLabel("");
         highscore = new JLabel("");
@@ -206,10 +207,12 @@ public class GamePanel extends JPanel implements Runnable {
         }
         // Handle player movement
         if (keyHandler.isSpacebarPress()) {
+
             // Jumping acceleration
             playerSpeedY = -10; // You can adjust this value for smoother jumping
             playerY += (int) playerSpeedY;
             keyHandler.resetSpacebarReleased();
+
 
             // Check if the player is above the top of the window
             if (playerY < 0) {
@@ -228,18 +231,17 @@ public class GamePanel extends JPanel implements Runnable {
             deathSound.play();
             if (!testingRestartFeature) {           // previous build
                 resetGame();
-            }
-            else if (testingRestartFeature) {       // new build
+            } else if (testingRestartFeature) {       // new build
                 resetGame(difficulty);
             }
         }
     }
 
 
-        private void resetGame () {
-
+    private void resetGame() {
         musicLoop.stop();
         gameThread.interrupt();// Interrupt the current thread if it's still running
+
         // Create a new JFrame instance
         JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
         window.getContentPane().removeAll(); // Remove all components from the window
@@ -255,6 +257,7 @@ public class GamePanel extends JPanel implements Runnable {
         window.repaint();
         // Start the new game thread
         newGamePanel.startGameThread();
+
     }
 
     private void resetGame(String difficulty) {
@@ -267,7 +270,6 @@ public class GamePanel extends JPanel implements Runnable {
         restartWindow.setVisible(true);
         restartWindow.pack();
     }
-
 
 
     public void paintComponent(Graphics g) {
