@@ -162,11 +162,9 @@ public class GamePanel extends JPanel implements Runnable {
         long pipeSpawnInterval;
         if (difficulty.equalsIgnoreCase("hard")) {
             pipeSpawnInterval = 2300;
-            highscoreList.saveHardHighscore();
             highscore.setText(String.valueOf(highscoreList.printHardHighscore()));
             playerScore.setText(String.valueOf(score));
         } else {
-            highscoreList.saveEasyHighscore();
             highscore.setText(String.valueOf(highscoreList.printEasyHighscore()));
             playerScore.setText(String.valueOf(score));
             pipeSpawnInterval = 2800;
@@ -194,12 +192,35 @@ public class GamePanel extends JPanel implements Runnable {
             if (pipeX <= playerX && !pipe.isPassed()) {
                 score++;
                 pipe.setPassed(true);
-                playerScore.setText("" + score);
-                highscoreList.addScore(score);
+             //   playerScore.setText("" + score);
             }
             if (playerRect.intersects(upperPipeRect) || playerRect.intersects(lowerPipeRect)) {
                 deathSound.play();
+                if(difficulty.equalsIgnoreCase("hard")){
+                    highscoreList.addScore(score);
+                    highscoreList.saveHardHighscore();
+                }
+                else{
+                    highscoreList.addScore(score);
+                    highscoreList.saveEasyHighscore();
+                }
                 resetGame();
+            }
+            if (playerY >= screenHeight - tileSize) {
+                deathSound.play();
+                if(difficulty.equalsIgnoreCase("hard")){
+                    highscoreList.addScore(score);
+                    highscoreList.saveHardHighscore();
+                }
+                else{
+                    highscoreList.addScore(score);
+                    highscoreList.saveEasyHighscore();
+                }
+                if (!testingRestartFeature) {           // previous build
+                    resetGame();
+                } else if (testingRestartFeature) {       // new build
+                    resetGame(difficulty);
+                }
             }
             if (pipe.getX() >= playerX) {
                 pipe.setPassed(false);
@@ -223,17 +244,6 @@ public class GamePanel extends JPanel implements Runnable {
         if (System.currentTimeMillis() >= startTime + 1000) {
             playerSpeedY += 0.5;
             playerY += (int) playerSpeedY;
-        }
-
-
-        // Check if the player is on the ground
-        if (playerY >= screenHeight - tileSize) {
-            deathSound.play();
-            if (!testingRestartFeature) {           // previous build
-                resetGame();
-            } else if (testingRestartFeature) {       // new build
-                resetGame(difficulty);
-            }
         }
     }
 

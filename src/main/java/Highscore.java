@@ -27,7 +27,13 @@ public class Highscore {
     }
 
     public void saveHardHighscore() {
-        if (Files.exists(filePathHard)) {
+        if (!Files.exists(filePathHard)) {
+            try {
+                Files.createFile(filePathHard);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
             try (
                     BufferedWriter writer = Files.newBufferedWriter((filePathHard)
                             ,StandardCharsets.UTF_8
@@ -36,35 +42,47 @@ public class Highscore {
                     writer.write(Integer.toString(showHighscore()));
                     writer.newLine();
                     highscore.clear();
+
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        } else {
+
+        }
+    }
+
+    public List<Integer> printHardHighscore() {
+        List<Integer> hardHighscores = new ArrayList<>();
+        String line;
+        if (!Files.exists(filePathHard)) {
             try {
                 Files.createFile(filePathHard);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    public List<Integer> printHardHighscore() {
-        String line;
-        List<Integer> hardHighscores = new ArrayList<>();
-        try (BufferedReader inputReader = Files.newBufferedReader(filePathHard)) {
-            while ((line = inputReader.readLine()) != null) {
-                int score = Integer.parseInt(line);
-                hardHighscores.add(score);
+            else{
+                try (BufferedReader inputReader = Files.newBufferedReader(filePathHard)) {
+                    while ((line = inputReader.readLine()) != null) {
+                        int score = Integer.parseInt(line);
+                        hardHighscores.add(score);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                hardHighscores.sort(Collections.reverseOrder());
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        hardHighscores.sort(Collections.reverseOrder());
         return hardHighscores.subList(0, Math.min(5,hardHighscores.size()));
     }
     public void saveEasyHighscore() {
-        if (Files.exists(filePathEasy)) {
+        if (!Files.exists(filePathEasy)) {
+            try {
+                Files.createFile(filePathEasy);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else{
             try (
                     BufferedWriter writer = Files.newBufferedWriter((filePathEasy)
                             ,StandardCharsets.UTF_8
@@ -77,24 +95,27 @@ public class Highscore {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        } else {
+        }
+    }
+    public List<Integer> printEasyHighscore() {
+        String line;
+        List<Integer> easyHighscores = new ArrayList<>();
+        if (!Files.exists(filePathEasy)) {
             try {
                 Files.createFile(filePathEasy);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-    }
-    public List<Integer> printEasyHighscore() {
-        String line;
-        List<Integer> easyHighscores = new ArrayList<>();
-        try (BufferedReader inputReader = Files.newBufferedReader(filePathEasy)) {
-            while ((line = inputReader.readLine()) != null) {
-                int score = Integer.parseInt(line);
-                easyHighscores.add(score);
+        else{
+            try (BufferedReader inputReader = Files.newBufferedReader(filePathEasy)) {
+                while ((line = inputReader.readLine()) != null) {
+                    int score = Integer.parseInt(line);
+                    easyHighscores.add(score);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
         easyHighscores.sort(Collections.reverseOrder());
         return easyHighscores.subList(0, Math.min(5, easyHighscores.size()));
