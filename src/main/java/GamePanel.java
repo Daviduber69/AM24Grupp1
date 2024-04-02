@@ -5,10 +5,10 @@ import java.util.List;
 
 public class GamePanel extends JPanel implements Runnable {
     // ------------------ FLAG-TESTING -------------------- //
-
     private boolean testingRestartFeature = false;  // turn true to try new feature
 
     // ------------------ FLAG-TESTING -------------------- //
+
     final int originalTileSize = 16; // 16x16
     final int scale = 3;
     final int tileSize = originalTileSize * scale; // 16x3 = 48px
@@ -157,13 +157,12 @@ public class GamePanel extends JPanel implements Runnable {
     // then calls the resetSpacebarReleased method which is set to false as default
     // Bird doesn't move further down when at the bottom of the screen
     long startTime = System.currentTimeMillis();
-
     public void update() {
         long pipeSpawnInterval;
         if (difficulty.equalsIgnoreCase("hard")) {
             pipeSpawnInterval = 2300;
-            highscore.setText(String.valueOf(highscoreList.printHardHighscore()));
             playerScore.setText(String.valueOf(score));
+            highscore.setText(String.valueOf(highscoreList.printHardHighscore()));
         } else {
             highscore.setText(String.valueOf(highscoreList.printEasyHighscore()));
             playerScore.setText(String.valueOf(score));
@@ -199,6 +198,8 @@ public class GamePanel extends JPanel implements Runnable {
                 if(difficulty.equalsIgnoreCase("hard")){
                     highscoreList.addScore(score);
                     highscoreList.saveHardHighscore();
+
+
                 }
                 else{
                     highscoreList.addScore(score);
