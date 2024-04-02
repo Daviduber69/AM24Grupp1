@@ -1,35 +1,40 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 public class GameMenu extends JFrame {
-    private GamePanel gamePanel;
 
     public GameMenu() {
         super("Game Menu");
-        setSize(500, 1000);
+        setSize(1000, 1000);
         setLocationRelativeTo(null);
         setResizable(false);
         setLayout(new BorderLayout());
 
-        ImageIcon backgroundImage = new ImageIcon("office2.jpg");
+        ImageIcon backgroundImage = new ImageIcon("devilRamTitel.png");
         JLabel backgroundLabel = new JLabel(backgroundImage);
         add(backgroundLabel, BorderLayout.CENTER);
-
-
+        
+        
         JButton easyButton = new JButton("Easy");
-        add(easyButton, BorderLayout.WEST);
+        easyButton.setPreferredSize(new Dimension(150,100));
         easyButton.setBackground(Color.GREEN);
         easyButton.setFont(new Font("Arial", Font.BOLD, 48));
         easyButton.addActionListener(e -> startGame("easy"));
-
+        add(easyButton, BorderLayout.WEST);
+        
         JButton hardButton = new JButton("Hard");
-        add(hardButton, BorderLayout.EAST);
+        hardButton.setPreferredSize(new Dimension(150,100));
         hardButton.setBackground(Color.RED);
         hardButton.setFont(new Font("Arial", Font.BOLD, 48));
         hardButton.addActionListener(e -> startGame("hard"));
+        add(hardButton, BorderLayout.EAST);
+        
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(easyButton);
+        buttonPanel.add(hardButton);
+        add(buttonPanel, BorderLayout.SOUTH);
+     
         setVisible(true);
-
     }
 
     public void startGame(String difficulty) {
@@ -46,4 +51,6 @@ public class GameMenu extends JFrame {
         window.requestFocus();                                  // Allowing the user to interact with the window
         gamePanel.startGameThread();                             // starting gameThread
     }
+
+    
 }
