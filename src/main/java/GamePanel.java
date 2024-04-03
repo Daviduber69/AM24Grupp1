@@ -193,35 +193,22 @@ public class GamePanel extends JPanel implements Runnable {
                 pipe.setPassed(true);
              //   playerScore.setText("" + score);
             }
-            if (playerRect.intersects(upperPipeRect) || playerRect.intersects(lowerPipeRect)) {
+            if (playerRect.intersects(upperPipeRect) || playerRect.intersects(lowerPipeRect)||
+                    playerY >= screenHeight - tileSize) {
                 deathSound.play();
                 if(difficulty.equalsIgnoreCase("hard")){
-                    highscoreList.addScore(score);
-                    highscoreList.saveHardHighscore();
-
-
+                    if(score>0){
+                        highscoreList.addScore(score);
+                        highscoreList.saveHardHighscore();
+                    }
                 }
                 else{
-                    highscoreList.addScore(score);
-                    highscoreList.saveEasyHighscore();
+                    if(score>0){
+                        highscoreList.addScore(score);
+                        highscoreList.saveEasyHighscore();
+                    }
                 }
                 resetGame();
-            }
-            if (playerY >= screenHeight - tileSize) {
-                deathSound.play();
-                if(difficulty.equalsIgnoreCase("hard")){
-                    highscoreList.addScore(score);
-                    highscoreList.saveHardHighscore();
-                }
-                else{
-                    highscoreList.addScore(score);
-                    highscoreList.saveEasyHighscore();
-                }
-                if (!testingRestartFeature) {           // previous build
-                    resetGame();
-                } else if (testingRestartFeature) {       // new build
-                    resetGame(difficulty);
-                }
             }
             if (pipe.getX() >= playerX) {
                 pipe.setPassed(false);
