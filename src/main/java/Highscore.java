@@ -28,14 +28,6 @@ public class Highscore {
         highscore.add(new UserHighscore(name, score));
     }
 
-    public int showHighscore() {
-        if (highscore.isEmpty()) {
-            return 0;
-        }
-        highscore.sort(Collections.reverseOrder());
-        return highscore.get(0).getScore();
-    }
-
     public void saveHardHighscore() {
         if (!Files.exists(filePathHard)) {
             try {
@@ -48,10 +40,8 @@ public class Highscore {
                     BufferedWriter writer = Files.newBufferedWriter((filePathHard)
                             , StandardCharsets.UTF_8
                             , StandardOpenOption.APPEND)) {
-                if (showHighscore() > 0) {
                     for (UserHighscore userhighscore : highscore) {
                         writer.write(userhighscore.getName() + " " + userhighscore.getScore() + "\n");
-                    }
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -97,10 +87,8 @@ public class Highscore {
                     BufferedWriter writer = Files.newBufferedWriter((filePathEasy)
                             , StandardCharsets.UTF_8
                             , StandardOpenOption.APPEND)) {
-                if (showHighscore() > 0) {
-                    writer.write(Integer.toString(showHighscore()));
-                    writer.newLine();
-                    highscore.clear();
+                for(UserHighscore userHighscore : highscore){
+                    writer.write(userHighscore.getName()+ " "+ userHighscore.getScore()+"\n");
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -108,9 +96,9 @@ public class Highscore {
         }
     }
 
-    public List<Integer> printEasyHighscore() {
+    public List<UserHighscore> printEasyHighscore() {
         String line;
-        List<Integer> easyHighscores = new ArrayList<>();
+        List<UserHighscore> easyHighscores = new ArrayList<>();
         if (!Files.exists(filePathEasy)) {
             try {
                 Files.createFile(filePathEasy);
@@ -120,8 +108,10 @@ public class Highscore {
         } else {
             try (BufferedReader inputReader = Files.newBufferedReader(filePathEasy)) {
                 while ((line = inputReader.readLine()) != null) {
-                    int score = Integer.parseInt(line);
-                    easyHighscores.add(score);
+                  String[]arr = line.split(" ");
+                  String name = arr[0];
+                  int score = Integer.parseInt(arr[1]);
+                  easyHighscores.add(new UserHighscore(name,score));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
