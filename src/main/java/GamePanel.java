@@ -47,6 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
      * background color and also sets whether this
      * component should use a buffer to paint.
      */
+
     public GamePanel(String difficulty) {
         setDifficulty(difficulty);
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -191,7 +192,6 @@ public class GamePanel extends JPanel implements Runnable {
             if (pipeX <= playerX && !pipe.isPassed()) {
                 score++;
                 pipe.setPassed(true);
-             //   playerScore.setText("" + score);
             }
             if (playerRect.intersects(upperPipeRect) || playerRect.intersects(lowerPipeRect)||
                     playerY >= screenHeight - tileSize) {
@@ -204,7 +204,7 @@ public class GamePanel extends JPanel implements Runnable {
                 }
                 else{
                     if(score>0){
-                        highscoreList.addScore(score);
+                        highscoreList.addScoreEasy(score);
                         highscoreList.saveEasyHighscore();
                     }
                 }
@@ -257,14 +257,14 @@ public class GamePanel extends JPanel implements Runnable {
         newGamePanel.startGameThread();
 
     }
-
+RestartWindow restartWindow;
     private void resetGame(String difficulty) {
         musicLoop.stop();
         gameThread.interrupt();
         JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
-        window.getContentPane().removeAll(); // Remove all components from the window
         window.dispose();
-        RestartWindow restartWindow = new RestartWindow(difficulty);
+        window.getContentPane().removeAll(); // Remove all components from the window
+        restartWindow = new RestartWindow(difficulty);
         restartWindow.setVisible(true);
         restartWindow.pack();
     }

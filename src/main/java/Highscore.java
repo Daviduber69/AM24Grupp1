@@ -5,6 +5,7 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Highscore {
     private List<UserHighscore> highscore;
@@ -19,13 +20,42 @@ public class Highscore {
         return highscore;
     }
 
+
     public void addScore(int score) {
-        String name = JOptionPane.showInputDialog("Enter your name: ");
-        if(name == null){
-            name = "Unknown";
+        if (printHardHighscore().size()<5){
+               String name = JOptionPane.showInputDialog("Enter your name: ");
+               if (name.isEmpty()) {
+                   name = "Unknown";
+               }
+               name = name.replaceAll("\\s+", "");
+               highscore.add(new UserHighscore(name, score));
+           }
+           else if (printHardHighscore().size() == 5  && score > printHardHighscore().get(4).getScore()) {
+                String name = JOptionPane.showInputDialog("Enter your name: ");
+                if (name.isEmpty()) {
+                    name = "Unknown";
+                }
+                name = name.replaceAll("\\s+", "");
+                highscore.add(new UserHighscore(name, score));
+            }
+    }
+   public void addScoreEasy(int score){
+        if (printEasyHighscore().size()<5){
+            String name = JOptionPane.showInputDialog("Enter your name: ");
+            if (name.isEmpty()) {
+                name = "Unknown";
+            }
+            name = name.replaceAll("\\s+", "");
+            highscore.add(new UserHighscore(name, score));
         }
-        name = name.replaceAll("\\s+", "");
-        highscore.add(new UserHighscore(name, score));
+       else if (printEasyHighscore().size() == 5  && score >printEasyHighscore().get(4).getScore()) {
+            String name = JOptionPane.showInputDialog("Enter your name: ");
+            if (name.isEmpty()) {
+                name = "Unknown";
+            }
+            name = name.replaceAll("\\s+", "");
+            highscore.add(new UserHighscore(name, score));
+        }
     }
 
     public void saveHardHighscore() {
@@ -40,8 +70,8 @@ public class Highscore {
                     BufferedWriter writer = Files.newBufferedWriter((filePathHard)
                             , StandardCharsets.UTF_8
                             , StandardOpenOption.APPEND)) {
-                    for (UserHighscore userhighscore : highscore) {
-                        writer.write(userhighscore.getName() + " " + userhighscore.getScore() + "\n");
+                for (UserHighscore userhighscore : highscore) {
+                    writer.write(userhighscore.getName() + " " + userhighscore.getScore() + "\n");
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -87,8 +117,8 @@ public class Highscore {
                     BufferedWriter writer = Files.newBufferedWriter((filePathEasy)
                             , StandardCharsets.UTF_8
                             , StandardOpenOption.APPEND)) {
-                for(UserHighscore userHighscore : highscore){
-                    writer.write(userHighscore.getName()+ " "+ userHighscore.getScore()+"\n");
+                for (UserHighscore userHighscore : highscore) {
+                    writer.write(userHighscore.getName() + " " + userHighscore.getScore() + "\n");
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -108,10 +138,10 @@ public class Highscore {
         } else {
             try (BufferedReader inputReader = Files.newBufferedReader(filePathEasy)) {
                 while ((line = inputReader.readLine()) != null) {
-                  String[]arr = line.split(" ");
-                  String name = arr[0];
-                  int score = Integer.parseInt(arr[1]);
-                  easyHighscores.add(new UserHighscore(name,score));
+                    String[] arr = line.split(" ");
+                    String name = arr[0];
+                    int score = Integer.parseInt(arr[1]);
+                    easyHighscores.add(new UserHighscore(name, score));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

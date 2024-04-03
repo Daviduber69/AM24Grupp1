@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameMenu extends JFrame {
-
     public GameMenu() {
         super("Game Menu");
         setSize(1000, 1000);
@@ -51,6 +50,4 @@ public class GameMenu extends JFrame {
         window.requestFocus();                                  // Allowing the user to interact with the window
         gamePanel.startGameThread();                             // starting gameThread
     }
-
-    
 }
