@@ -10,7 +10,7 @@ public class GameMenu extends JFrame {
         setResizable(false);
         setLayout(new BorderLayout());
 
-        ImageIcon backgroundImage = new ImageIcon("devilRamTitel.png");
+        ImageIcon backgroundImage = new ImageIcon("Media/devilRamTitel.png");
         JLabel backgroundLabel = new JLabel(backgroundImage);
         add(backgroundLabel, BorderLayout.CENTER);
         

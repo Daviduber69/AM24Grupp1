@@ -2,7 +2,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
-    SoundPlayer jumpSound = new SoundPlayer("whoosh.wav", false);
+    SoundPlayer jumpSound = new SoundPlayer("Media/whoosh.wav", false);
     private boolean spacebarPress;
     private boolean spacebarRelease;
 

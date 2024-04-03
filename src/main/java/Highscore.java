@@ -21,7 +21,7 @@ public class Highscore {
 
     public void addScore(int score) {
         String name = JOptionPane.showInputDialog("Enter your name: ");
-        if(name.isEmpty()){
+        if(name == null){
             name = "Unknown";
         }
         name = name.replaceAll("\\s+", "");

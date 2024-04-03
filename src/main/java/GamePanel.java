@@ -55,8 +55,8 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         this.requestFocusInWindow();
         images = new ImagePanel();
-        deathSound = new SoundPlayer("OOFF.wav", false);
-        musicLoop = new SoundPlayer("questsong-.wav", true);
+        deathSound = new SoundPlayer("Media/OOFF.wav", false);
+        musicLoop = new SoundPlayer("Media/questsong-.wav", true);
         playerScore = new JLabel("");
         highscore = new JLabel("");
         playerScore.setOpaque(false);
@@ -68,7 +68,7 @@ public class GamePanel extends JPanel implements Runnable {
         highscore.setBounds(400, 10, 100, 50);
         this.add(playerScore);
         this.add(highscore);
-        backGroundImage = new ImageIcon("_88d2b0b7-b505-4a37-a995-69152b5e5b97.jpg").getImage();
+        backGroundImage = new ImageIcon("Media/_88d2b0b7-b505-4a37-a995-69152b5e5b97.jpg").getImage();
     }
     /*
     In this method you regulate the appropriate variables
