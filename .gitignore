@@ -1,6 +1,5 @@
 *.class
 .idea/
 *.save
-target/
 .DS_Store
 *.txt
