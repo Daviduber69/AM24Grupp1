@@ -21,16 +21,10 @@ public class Highscore {
     }
 
 
-    public void addScore(int score) {
-        if (printHardHighscore().size()<5){
-               String name = JOptionPane.showInputDialog("Enter your name: ");
-               if (name.isEmpty()) {
-                   name = "Unknown";
-               }
-               name = name.replaceAll("\\s+", "");
-               highscore.add(new UserHighscore(name, score));
-           }
-           else if (printHardHighscore().size() == 5  && score > printHardHighscore().get(4).getScore()) {
+    public void addScore(int score, boolean difficulty) {
+        if (difficulty) {
+            if ((printHardHighscore().size() == 5 && score > printHardHighscore().get(4).getScore())
+                    || printHardHighscore().size() < 5) {
                 String name = JOptionPane.showInputDialog("Enter your name: ");
                 if (name.isEmpty()) {
                     name = "Unknown";
@@ -38,45 +32,58 @@ public class Highscore {
                 name = name.replaceAll("\\s+", "");
                 highscore.add(new UserHighscore(name, score));
             }
-    }
-   public void addScoreEasy(int score){
-        if (printEasyHighscore().size()<5){
-            String name = JOptionPane.showInputDialog("Enter your name: ");
-            if (name.isEmpty()) {
-                name = "Unknown";
-            }
-            name = name.replaceAll("\\s+", "");
-            highscore.add(new UserHighscore(name, score));
-        }
-       else if (printEasyHighscore().size() == 5  && score >printEasyHighscore().get(4).getScore()) {
-            String name = JOptionPane.showInputDialog("Enter your name: ");
-            if (name.isEmpty()) {
-                name = "Unknown";
-            }
-            name = name.replaceAll("\\s+", "");
-            highscore.add(new UserHighscore(name, score));
-        }
-    }
-
-    public void saveHardHighscore() {
-        if (!Files.exists(filePathHard)) {
-            try {
-                Files.createFile(filePathHard);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            try (
-                    BufferedWriter writer = Files.newBufferedWriter((filePathHard)
-                            , StandardCharsets.UTF_8
-                            , StandardOpenOption.APPEND)) {
-                for (UserHighscore userhighscore : highscore) {
-                    writer.write(userhighscore.getName() + " " + userhighscore.getScore() + "\n");
+        } else if (!difficulty ) {
+            if ((printEasyHighscore().size() == 5 && score > printEasyHighscore().get(4).getScore())
+                    || printEasyHighscore().size() < 5) {
+                String name = JOptionPane.showInputDialog("Enter your name: ");
+                if (name.isEmpty()) {
+                    name = "Unknown";
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                name = name.replaceAll("\\s+", "");
+                highscore.add(new UserHighscore(name, score));
             }
+        }
+    }
 
+    public void saveHighscore(String difficulty) {
+        if (difficulty.equalsIgnoreCase("hard")) {
+            if (!Files.exists(filePathHard)) {
+                try {
+                    Files.createFile(filePathHard);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                try (
+                        BufferedWriter writer = Files.newBufferedWriter((filePathHard)
+                                , StandardCharsets.UTF_8
+                                , StandardOpenOption.APPEND)) {
+                    for (UserHighscore userhighscore : highscore) {
+                        writer.write(userhighscore.getName() + " " + userhighscore.getScore() + "\n");
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        } else if (difficulty.equalsIgnoreCase("easy")) {
+            if (!Files.exists(filePathEasy)) {
+                try {
+                    Files.createFile(filePathEasy);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                try (
+                        BufferedWriter writer = Files.newBufferedWriter((filePathEasy)
+                                , StandardCharsets.UTF_8
+                                , StandardOpenOption.APPEND)) {
+                    for (UserHighscore userHighscore : highscore) {
+                        writer.write(userHighscore.getName() + " " + userHighscore.getScore() + "\n");
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 
@@ -103,27 +110,6 @@ public class Highscore {
             hardHighscores.sort(Collections.reverseOrder());
         }
         return hardHighscores.subList(0, Math.min(5, hardHighscores.size()));
-    }
-
-    public void saveEasyHighscore() {
-        if (!Files.exists(filePathEasy)) {
-            try {
-                Files.createFile(filePathEasy);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            try (
-                    BufferedWriter writer = Files.newBufferedWriter((filePathEasy)
-                            , StandardCharsets.UTF_8
-                            , StandardOpenOption.APPEND)) {
-                for (UserHighscore userHighscore : highscore) {
-                    writer.write(userHighscore.getName() + " " + userHighscore.getScore() + "\n");
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 
     public List<UserHighscore> printEasyHighscore() {

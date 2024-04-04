@@ -198,14 +198,14 @@ public class GamePanel extends JPanel implements Runnable {
                 deathSound.play();
                 if(difficulty.equalsIgnoreCase("hard")){
                     if(score>0){
-                        highscoreList.addScore(score);
-                        highscoreList.saveHardHighscore();
+                        highscoreList.addScore(score, true);
+                        highscoreList.saveHighscore(difficulty);
                     }
                 }
-                else{
+                else if(difficulty.equalsIgnoreCase("easy")){
                     if(score>0){
-                        highscoreList.addScoreEasy(score);
-                        highscoreList.saveEasyHighscore();
+                        highscoreList.addScore(score, false);
+                        highscoreList.saveHighscore(difficulty);
                     }
                 }
                 resetGame();
