@@ -32,7 +32,7 @@ public class Highscore {
                 name = name.replaceAll("\\s+", "");
                 highscore.add(new UserHighscore(name, score));
             }
-        } else if (!difficulty ) {
+        } else {
             if ((printEasyHighscore().size() == 5 && score > printEasyHighscore().get(4).getScore())
                     || printEasyHighscore().size() < 5) {
                 String name = JOptionPane.showInputDialog("Enter your name: ");

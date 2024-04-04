@@ -36,6 +36,7 @@ public class GamePanel extends JPanel implements Runnable {
     private int pipeHeight = 805;
     private int playerWidth = 99;
     private int playerHeight = 99;
+    private boolean deadBird;
     private long lastPipeSpawnTime = System.currentTimeMillis();
     private final List<Pipes> pipes = new ArrayList<>();
     Highscore highscoreList = new Highscore();
@@ -159,6 +160,7 @@ public class GamePanel extends JPanel implements Runnable {
     // Bird doesn't move further down when at the bottom of the screen
     long startTime = System.currentTimeMillis();
     public void update() {
+        deadBird = false;
         long pipeSpawnInterval;
         if (difficulty.equalsIgnoreCase("hard")) {
             pipeSpawnInterval = 2300;
@@ -193,23 +195,26 @@ public class GamePanel extends JPanel implements Runnable {
                 score++;
                 pipe.setPassed(true);
             }
-            if (playerRect.intersects(upperPipeRect) || playerRect.intersects(lowerPipeRect)||
-                    playerY >= screenHeight - tileSize) {
+            if (!deadBird && (playerRect.intersects(upperPipeRect) || playerRect.intersects(lowerPipeRect) ||
+                    playerY >= screenHeight - tileSize)) {
                 deathSound.play();
-                if(difficulty.equalsIgnoreCase("hard")){
-                    if(score>0){
-                        highscoreList.addScore(score, true);
-                        highscoreList.saveHighscore(difficulty);
+                deadBird = true;
+                    if(difficulty.equalsIgnoreCase("hard")){
+                        if(score>0){
+                            highscoreList.addScore(score, true);
+                            highscoreList.saveHighscore(difficulty);
+                        }
                     }
-                }
-                else if(difficulty.equalsIgnoreCase("easy")){
-                    if(score>0){
-                        highscoreList.addScore(score, false);
-                        highscoreList.saveHighscore(difficulty);
+                    else if(difficulty.equalsIgnoreCase("easy")){
+                        if(score>0){
+                            highscoreList.addScore(score, false);
+                            highscoreList.saveHighscore(difficulty);
+                        }
                     }
-                }
-                resetGame();
+                    resetGame();
             }
+
+
             if (pipe.getX() >= playerX) {
                 pipe.setPassed(false);
             }
