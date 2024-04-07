@@ -26,8 +26,8 @@ public class Highscore {
             if ((printHardHighscore().size() == 5 && score > printHardHighscore().get(4).getScore())
                     || printHardHighscore().size() < 5) {
                 String name = JOptionPane.showInputDialog("Enter your name: ");
-                if (name == null) {
-                    name = "Unknown";
+                if (name == null || name.isEmpty()) {
+                    name = "???";
                 }
                 name = name.replaceAll("\\s+", "");
                 highscore.add(new UserHighscore(name, score));
@@ -36,8 +36,8 @@ public class Highscore {
             if ((printEasyHighscore().size() == 5 && score > printEasyHighscore().get(4).getScore())
                     || printEasyHighscore().size() < 5) {
                 String name = JOptionPane.showInputDialog("Enter your name: ");
-                if (name == null) {
-                    name = "Unknown";
+                if (name == null || name.isEmpty()) {
+                    name = "???";
                 }
                 name = name.replaceAll("\\s+", "");
                 highscore.add(new UserHighscore(name, score));

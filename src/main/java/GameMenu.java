@@ -40,7 +40,7 @@ public class GameMenu extends JFrame {
         dispose();                                              // closes previous JFrame-object
         JFrame window = new JFrame();                           // Creates a new window
         GamePanel gamePanel = new GamePanel(difficulty);        // Creates a new GamePanel
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Makes closing on demand available
+        window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  // Makes closing on demand available
         window.setResizable(false);                             // Sets this frame not resizable by the user.
         window.setTitle("Jumpy Birb");                          // Set title
         window.add(gamePanel);                                  // Makes everything that is modified in gamePanel class visible in the window
