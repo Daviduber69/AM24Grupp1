@@ -292,7 +292,7 @@ public class GamePanel extends JPanel implements Runnable {
         g.setColor(Color.PINK);
         g.drawImage(backGroundImage, 0, 0, getWidth(), getHeight(), this);
         g2.drawImage(ImagePanel.playerImage, playerX, playerY, this);
-        g.drawString("Press Q to quit!",300,30);
+        g.drawString("Press Q for Main Menu!",800,30);
         if (difficulty.equalsIgnoreCase("hard")) {
             int y = 50;
             for (UserHighscore uhs : hardHS) {
