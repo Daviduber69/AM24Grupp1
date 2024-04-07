@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -5,12 +6,15 @@ public class KeyHandler implements KeyListener {
     SoundPlayer jumpSound = new SoundPlayer("Media/whoosh.wav", false);
     private boolean spacebarPress;
     private boolean spacebarRelease;
+    private boolean qPress;
 
     //registers a spacebar press as only one button press
     public boolean isSpacebarPress() {
         return spacebarPress && spacebarRelease;
     }
-
+    public boolean isQpress (){
+        return qPress;
+    }
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -24,6 +28,14 @@ public class KeyHandler implements KeyListener {
             spacebarPress = true;
             //startGame(); // Anropa startGame() när spacebar trycks ned
 
+        }
+        if(code == KeyEvent.VK_Q){
+            qPress = true;
+            SwingUtilities.invokeLater(() -> {
+                GameMenu menu = new GameMenu();
+                menu.dispose();
+                menu.setVisible(true);
+            });
         }
     }
 

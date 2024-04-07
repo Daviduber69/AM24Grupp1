@@ -132,7 +132,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void run() {
         double drawInterval = 1000000000.0 / fps; // 0.016666 seconds
         double nextDrawTime = System.nanoTime() + drawInterval;
-        while (gameThread != null) {
+        while (!Thread.interrupted()) {
             update();
             repaint();
             try {
@@ -144,11 +144,11 @@ public class GamePanel extends JPanel implements Runnable {
                 Thread.sleep((long) remainingtime);
                 nextDrawTime += drawInterval;
             } catch (InterruptedException e) {
-                System.err.println("YOU DIED!!!");
-                break;
+                 Thread.currentThread().interrupt();
             }
         }
-    }
+        }
+
 
     //add pipes pipes with startng coordinate values, for easy mode they spawn at the same coordinates
     //in update() spawn new pipes every 4 seconds
@@ -212,7 +212,6 @@ public class GamePanel extends JPanel implements Runnable {
                 resetGame();
             }
 
-
             if (pipe.getX() >= playerX) {
                 pipe.setPassed(false);
             }
@@ -229,6 +228,15 @@ public class GamePanel extends JPanel implements Runnable {
             // Check if the player is above the top of the window
             if (playerY < 0) {
                 playerY = 0;
+            }
+        }
+        if(keyHandler.isQpress()){
+            gameThread.interrupt();
+            musicLoop.stop();
+            JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
+            if (window != null) {
+                window.dispose();
+                window.getContentPane().removeAll();
             }
         }
         // Gravity starts after 1 second
@@ -278,13 +286,13 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g.setFont(new Font("Arial", Font.BOLD, 24));
-        g.setColor(Color.PINK);
         List<UserHighscore> hardHS = highscoreList.printHardHighscore();
         List<UserHighscore> easyHS = highscoreList.printEasyHighscore();
-
+        g.setFont(new Font("Arial", Font.BOLD, 24));
+        g.setColor(Color.PINK);
         g.drawImage(backGroundImage, 0, 0, getWidth(), getHeight(), this);
         g2.drawImage(ImagePanel.playerImage, playerX, playerY, this);
+        g.drawString("Press Q to quit!",300,30);
         if (difficulty.equalsIgnoreCase("hard")) {
             int y = 50;
             for (UserHighscore uhs : hardHS) {
