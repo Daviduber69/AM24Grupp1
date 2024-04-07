@@ -21,7 +21,6 @@ public class GamePanel extends JPanel implements Runnable {
     private JLabel playerScore;
     private SoundPlayer deathSound;
     private SoundPlayer musicLoop;
-    private SoundPlayer jumpSound;
     ImagePanel images;
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
@@ -66,7 +65,7 @@ public class GamePanel extends JPanel implements Runnable {
         playerScore.setBackground(Color.black);
         playerScore.setFont(new Font("Arial", Font.BOLD, 48));
         highscore.setForeground(Color.pink);
-        highscore.setFont(new Font("Arial", Font.BOLD, 24));
+        highscore.setFont(new Font("Arial", Font.BOLD, 16));
         highscore.setBounds(400, 10, 100, 50);
         this.add(playerScore);
         this.add(highscore);
@@ -92,8 +91,8 @@ public class GamePanel extends JPanel implements Runnable {
     private void initializePipesEasy() {
         Random random = new Random();
         int lowerY = 900;
-        int upperY = random.nextInt(200) - 800 + 50;
-        lowerY = upperY + lowerY + 200;
+        int upperY = random.nextInt(400) - 700 + 50;
+        lowerY = upperY + lowerY +200;
         pipes.add(new Pipes(screenWidth, upperY, lowerY, false));
     }
 
@@ -159,15 +158,15 @@ public class GamePanel extends JPanel implements Runnable {
     // then calls the resetSpacebarReleased method which is set to false as default
     // Bird doesn't move further down when at the bottom of the screen
     long startTime = System.currentTimeMillis();
+
     public void update() {
         deadBird = false;
         long pipeSpawnInterval;
         if (difficulty.equalsIgnoreCase("hard")) {
             pipeSpawnInterval = 2300;
             playerScore.setText(String.valueOf(score));
-            highscore.setText(String.valueOf(highscoreList.printHardHighscore()));
+
         } else {
-            highscore.setText(String.valueOf(highscoreList.printEasyHighscore()));
             playerScore.setText(String.valueOf(score));
             pipeSpawnInterval = 2800;
         }
@@ -179,9 +178,9 @@ public class GamePanel extends JPanel implements Runnable {
         // Move the pipes to the left
         for (Pipes pipe : pipes) {
             if (difficulty.equalsIgnoreCase("hard")) {
-                pipe.setX((pipe.getX() - 6));
+                pipe.setX((pipe.getX() - 8));
             } else {
-                pipe.setX((pipe.getX() - 5));
+                pipe.setX((pipe.getX() - 7));
             }
             int pipeX = pipe.getX();
             int upperPipeY = pipe.getUpperPipeY();
@@ -199,19 +198,18 @@ public class GamePanel extends JPanel implements Runnable {
                     playerY >= screenHeight - tileSize)) {
                 deathSound.play();
                 deadBird = true;
-                    if(difficulty.equalsIgnoreCase("hard")){
-                        if(score>0){
-                            highscoreList.addScore(score, true);
-                            highscoreList.saveHighscore(difficulty);
-                        }
+                if (difficulty.equalsIgnoreCase("hard")) {
+                    if (score > 0) {
+                        highscoreList.addScore(score, true);
+                        highscoreList.saveHighscore(difficulty);
                     }
-                    else if(difficulty.equalsIgnoreCase("easy")){
-                        if(score>0){
-                            highscoreList.addScore(score, false);
-                            highscoreList.saveHighscore(difficulty);
-                        }
+                } else if (difficulty.equalsIgnoreCase("easy")) {
+                    if (score > 0) {
+                        highscoreList.addScore(score, false);
+                        highscoreList.saveHighscore(difficulty);
                     }
-                    resetGame();
+                }
+                resetGame();
             }
 
 
@@ -262,7 +260,9 @@ public class GamePanel extends JPanel implements Runnable {
         newGamePanel.startGameThread();
 
     }
-RestartWindow restartWindow;
+
+    RestartWindow restartWindow;
+
     private void resetGame(String difficulty) {
         musicLoop.stop();
         gameThread.interrupt();
@@ -278,9 +278,26 @@ RestartWindow restartWindow;
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        g.setFont(new Font("Arial", Font.BOLD, 24));
+        g.setColor(Color.PINK);
+        List<UserHighscore> hardHS = highscoreList.printHardHighscore();
+        List<UserHighscore> easyHS = highscoreList.printEasyHighscore();
+
         g.drawImage(backGroundImage, 0, 0, getWidth(), getHeight(), this);
         g2.drawImage(ImagePanel.playerImage, playerX, playerY, this);
-
+        if (difficulty.equalsIgnoreCase("hard")) {
+            int y = 50;
+            for (UserHighscore uhs : hardHS) {
+                g.drawString(uhs.getName() + ": " + uhs.getScore(), 30, y);
+                y += 30;
+            }
+        } else {
+            int y = 50;
+            for (UserHighscore uhs : easyHS) {
+                g.drawString(uhs.getName() + ": " + uhs.getScore(), 30, y);
+                y += 30;
+            }
+        }
         for (Pipes pipe : pipes) {
             int pipeX = pipe.getX();
             int upperPipeY = pipe.getUpperPipeY();
