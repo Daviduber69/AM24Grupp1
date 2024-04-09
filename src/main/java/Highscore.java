@@ -114,9 +114,6 @@ public class Highscore {
                 throw new RuntimeException(e);
             }
             hardHighscores.sort(Collections.reverseOrder());
-            for(UserHighscore uhs : hardHighscores){
-
-            }
         }
         return hardHighscores.subList(0, Math.min(5, hardHighscores.size()));
     }
