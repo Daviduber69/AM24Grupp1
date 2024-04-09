@@ -113,8 +113,8 @@ public class Highscore {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            hardHighscores.sort(Collections.reverseOrder());
         }
+        hardHighscores.sort(Collections.reverseOrder());
         return hardHighscores.subList(0, Math.min(5, hardHighscores.size()));
     }
 
