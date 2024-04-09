@@ -7,32 +7,30 @@ public class GameMenu extends JFrame {
         setSize(1000, 1000);
         setLocationRelativeTo(null);
         setResizable(false);
-        setLayout(new BorderLayout());
 
-        ImageIcon backgroundImage = new ImageIcon("Media/devilRamTitel.png");
-        JLabel backgroundLabel = new JLabel(backgroundImage);
-        add(backgroundLabel, BorderLayout.CENTER);
-        
-        
+        // Set the background image as the content pane
+        setContentPane(new JLabel(new ImageIcon("Media/devilRamTitel.png")));
+
+        // Set layout to null to freely position components
+        setLayout(null);
         JButton easyButton = new JButton("Easy");
-        easyButton.setPreferredSize(new Dimension(150,100));
-        easyButton.setBackground(Color.GREEN);
-        easyButton.setFont(new Font("Arial", Font.BOLD, 48));
+        easyButton.setBounds(300, 800, 200, 100);
+        easyButton.setBackground(Color.white);
+        easyButton.setForeground(Color.RED);
+        easyButton.setFont(new Font("Trattatello", Font.BOLD, 24));
         easyButton.addActionListener(e -> startGame("easy"));
-        add(easyButton, BorderLayout.WEST);
-        
+        add(easyButton);
+
         JButton hardButton = new JButton("Hard");
-        hardButton.setPreferredSize(new Dimension(150,100));
-        hardButton.setBackground(Color.RED);
-        hardButton.setFont(new Font("Arial", Font.BOLD, 48));
+        hardButton.setBounds(550, 800, 200, 100);
+        hardButton.setBackground(Color.white);
+        hardButton.setForeground(Color.RED);
+        hardButton.setFont(new Font("Trattatello", Font.BOLD, 24));
         hardButton.addActionListener(e -> startGame("hard"));
-        add(hardButton, BorderLayout.EAST);
-        
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(easyButton);
-        buttonPanel.add(hardButton);
-        add(buttonPanel, BorderLayout.SOUTH);
-     
+        add(hardButton);
+        revalidate();
+        repaint();
+
         setVisible(true);
     }
 
@@ -49,5 +47,6 @@ public class GameMenu extends JFrame {
         window.setVisible(true);                                // Makes the window visable for the user
         window.requestFocus();                                  // Allowing the user to interact with the window
         gamePanel.startGameThread();                             // starting gameThread
+
     }
 }

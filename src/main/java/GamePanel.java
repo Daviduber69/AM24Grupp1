@@ -69,7 +69,7 @@ public class GamePanel extends JPanel implements Runnable {
         highscore.setBounds(400, 10, 100, 50);
         this.add(playerScore);
         this.add(highscore);
-        backGroundImage = new ImageIcon("Media/_88d2b0b7-b505-4a37-a995-69152b5e5b97.jpg").getImage();
+        backGroundImage = new ImageIcon("Media/pixeloffice.jpg").getImage();
     }
     /*
     In this method you regulate the appropriate variables
@@ -286,23 +286,26 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        Graphics g3 = (Graphics2D)g.create();
         List<UserHighscore> hardHS = highscoreList.printHardHighscore();
         List<UserHighscore> easyHS = highscoreList.printEasyHighscore();
-        g.setFont(new Font("Arial", Font.BOLD, 24));
-        g.setColor(Color.PINK);
         g.drawImage(backGroundImage, 0, 0, getWidth(), getHeight(), this);
         g2.drawImage(ImagePanel.playerImage, playerX, playerY, this);
+        g.setFont(new Font("Arial", Font.BOLD, 24));
+        g.setColor(Color.RED);
         g.drawString("Press Q for Main Menu!",800,30);
+        g3.setColor(Color.BLACK);
+        g3.fillRect(0,0,150,170);
         if (difficulty.equalsIgnoreCase("hard")) {
-            int y = 50;
+            int y = 30;
             for (UserHighscore uhs : hardHS) {
-                g.drawString(uhs.getName() + ": " + uhs.getScore(), 30, y);
+                g.drawString(uhs.getName() + ": " + uhs.getScore(), 0, y);
                 y += 30;
             }
         } else {
             int y = 50;
             for (UserHighscore uhs : easyHS) {
-                g.drawString(uhs.getName() + ": " + uhs.getScore(), 30, y);
+                g.drawString(uhs.getName() + ": " + uhs.getScore(), 0, y);
                 y += 30;
             }
         }

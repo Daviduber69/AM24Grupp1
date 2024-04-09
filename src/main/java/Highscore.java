@@ -25,9 +25,12 @@ public class Highscore {
         if (difficulty) {
             if ((printHardHighscore().size() == 5 && score > printHardHighscore().get(4).getScore())
                     || printHardHighscore().size() < 5) {
-                String name = JOptionPane.showInputDialog("Enter your name: ");
+                String name = JOptionPane.showInputDialog("Enter your name(6 characters max): ");
                 if (name == null || name.isEmpty()) {
                     name = "???";
+                }
+                while(name.length()>6){
+                    name = JOptionPane.showInputDialog("Enter your name(6 characters max): ");
                 }
                 name = name.replaceAll("\\s+", "");
                 highscore.add(new UserHighscore(name, score));
@@ -35,9 +38,12 @@ public class Highscore {
         } else {
             if ((printEasyHighscore().size() == 5 && score > printEasyHighscore().get(4).getScore())
                     || printEasyHighscore().size() < 5) {
-                String name = JOptionPane.showInputDialog("Enter your name: ");
+                String name = JOptionPane.showInputDialog("Enter your name(6 characters max): ");
                 if (name == null || name.isEmpty()) {
                     name = "???";
+                }
+                while(name.length()>6){
+                     name = JOptionPane.showInputDialog("Enter your name (6 characters max): ");
                 }
                 name = name.replaceAll("\\s+", "");
                 highscore.add(new UserHighscore(name, score));
